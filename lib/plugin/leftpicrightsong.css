@@ -1,0 +1,91 @@
+#musiclrcshow {
+    /* width: calc(60% - 4px); */
+    display: inline-block;
+    margin-top: 40px;
+    height: calc(100% - 60px);
+    vertical-align: middle;
+}
+
+#sinfo {
+    text-align: center;
+    /* width: calc(40% - 4px); */
+    /* margin-top: 60px; */
+    /* height: 50%; */
+    vertical-align: middle;
+    height: unset;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+#textmusicmv {
+    display: inline-block;
+}
+
+@media screen and (min-width: 1200px)and (max-width: 1600px) {
+    #musiclrcshow {
+        width: calc(70% - 4px);
+    }
+
+    #sinfo {
+        width: calc(30% - 4px);
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    #musiclrcshow {
+        width: calc(60% - 4px);
+    }
+
+    #sinfo {
+        width: calc(40% - 4px);
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    #musiclrcshow {
+        width: calc(100% - 508px);
+    }
+
+    #sinfo {
+        width: 500px;
+    }
+}
+
+#sinfo #sinfoimg {
+    width: 60%;
+    height: 60%;
+}
+
+#ssingername {
+    display: none;
+}
+
+#sinfo #ssongname {
+    margin-bottom: 8px;
+    display: inline-block;
+    font-size: 22px;
+
+}
+
+
+
+#sinfo #sinfotext {
+    margin-top: 16px;
+    max-height: 30%;
+}
+
+#sinfo #sinfotext #spacebeforesinger {
+    display: block;
+    height: 0;
+}
+
+
+
+#lrc-bottom {
+
+    display: none !important;
+}
+
+#lrc-top {
+    display: none !important;
+}

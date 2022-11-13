@@ -1,0 +1,411 @@
+<?php
+include("./listfiles.php");
+include("./libs.php");
+Header("content-type: text/json", true);
+if (empty($_GET['type'])) {
+    echo '{"success":"fail","message":"缺少请求参数。","code":1}';
+    return;
+}
+if (empty($_GET['value'])) {
+    $value = "";
+} else {
+    $value = $_GET['value'];
+}
+$type = $_GET['type'];
+$offset = 0;
+$limit = 30;
+if (!empty($_GET['offset'])) {
+    $offset = (int)$_GET['offset'];
+}
+if (!empty($_GET['limit'])) {
+    $limit = (int)$_GET['limit'];
+}
+// $url = str_replace("\~", "%7E", $url);
+$headers = "";
+$value = urldecode($value);
+if ($offset < 1) $offset = 1;
+if ($limit < 1) $offset = 10;
+$page = $offset - 1;
+$offsets = ((int)$offset - 1) * ((int)$limit);
+$html = "";
+$result = json_decode('{}');
+if (substr($value, 0, 6) == 'MUSIC_') {
+    $value = substr($value, 6);
+}
+function searchSong($value)
+{
+    $result = json_decode('{"data":{"total":0,"list":[],"musicList":[]}}');
+    $file = fopen("location.txt", "r");
+    $keyword = $value;
+    //检测指正是否到达文件的未端
+
+    while (!feof($file)) {
+        $path = fgets($file);
+        // echo "<h1>$path</h1>";
+        scanAllFile(trim($path), $keyword);
+    }
+    fclose($file);
+    // echo json_encode($files);
+    foreach ($GLOBALS['files'] as $valued) {
+        // $line->data[] = $value->filename;
+        $res = $valued->path;
+        $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+        $filewithoutext = $valued->filename;
+        $filebasename = basename($filewithoutext);
+        $filepath = dirname($res);
+        $musicid = $valued->id;
+        $pathid = getId($filepath);
+        $singer = substr($filebasename, 0, strpos($filebasename, " - "));
+        if (strpos($filebasename, " - ") != false)
+            $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
+        else $songname = $filebasename;
+        // echo strpos($res, " - ");
+        if (!empty($songname)) {
+            $line->name = $songname;
+            $line->songName = $songname;
+        }
+        if (!empty($musicid)) {
+            $line->rid = $musicid;
+            $line->id = $musicid;
+            $line->musicrid = "MUSIC_" . $musicid;
+        }
+        if (!empty($singer)) {
+            $line->artist = $singer;
+            $line->artistid = base64_encode($singer);
+            $line->artistId = base64_encode($singer);
+        }
+        if (!empty($pathid)) {
+            $line->album = $filepath;
+            $line->albumid = $pathid;
+            $line->albumId = $pathid;
+        }
+        // $result->data->songinfo = $line;
+        $result->data->list[] = $line;
+        // echo json_encode($line);
+    }
+    // $result->data->lrclist = $lrc;
+    $result->data->total = $GLOBALS['total'];
+    $GLOBALS['result'] = $result;
+}
+// echo $offsets;
+switch ($type) {
+    case 'info':
+        $result = json_decode('{"data":{"lrclist":[],"songinfo":{}}}');
+        
+        $res = getSongPath($value);
+        if ($res == false) {
+            echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+            http_response_code(404);
+            return;
+        }
+        $filewithoutext = substr($res, 0, strrpos($res, "."));
+        $lrcres = $filewithoutext . '.lrc';
+        if (is_file($lrcres)) {
+            $lrctext = file_get_contents($lrcres);
+
+            $charset = mb_detect_encoding($lrctext, array('UTF-8', 'GBK', 'GB2312'));
+            $charset = strtolower($charset);
+            if ('cp936' == $charset) {
+                $charset = 'GBK';
+            }
+            if ("utf-8" != $charset) {
+                $lrcstr = iconv($charset, "UTF-8//IGNORE", $lrctext);
+            }
+            // return $str; 
+        } else {
+            $lrcstr = "";
+        }
+
+        $lrc = LRCTOOBJ($lrcstr);
+
+        
+        $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+        $filebasename = basename($filewithoutext);
+        $filepath = dirname($res);
+        $musicid = getId($res);
+        $pathid = getId($filepath);
+        $singer = substr($filebasename, 0, strpos($filebasename, " - "));
+        if (strpos($filebasename, " - ") != false)
+            $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
+        else $songname = $filebasename;
+        // echo strpos($res, " - ");
+        if (!empty($songname)) {
+            $line->name = $songname;
+            $line->songName = $songname;
+        }
+        if (!empty($musicid)) {
+            $line->rid = $musicid;
+            $line->id = $musicid;
+            $line->musicrid = "MUSIC_" . $musicid;
+        }
+        if (!empty($singer)) {
+            $line->artist = $singer;
+            $line->artistid = base64_encode($singer);
+            $line->artistId = base64_encode($singer);
+        }
+        if (!empty($pathid)) {
+            $line->album = $filepath;
+            $line->albumid = $pathid;
+            $line->albumId = $pathid;
+        }
+
+        $result->data->songinfo = $line;
+        $result->data->lrclist = $lrc;
+        $html = json_encode($result);
+        break;
+    case 'suggestKey':
+
+        $file = fopen("location.txt", "r");
+        $line = json_decode('{"code":200,"data":[]}');
+        $keyword = $value;
+        //检测指正是否到达文件的未端
+        $limit = 10;
+        $page = 0;
+        while (!feof($file)) {
+            $path = fgets($file);
+            // echo "<h1>$path</h1>";
+            scanAllFile(trim($path), $keyword, false);
+        }
+        fclose($file);
+        $suggests = array();
+        foreach ($files as $value) {
+            $val = $value->filename;
+            $singer = substr($val, 0, strpos($val, " - "));
+            $songname = substr($val, strpos($val, " - ") + 3);
+            if (strstr($singer, $keyword) != false) {
+                $suggests[] = $singer;
+            } else if (strstr($songname, $keyword) != false) {
+                $suggests[] = $songname;
+            }
+        }
+        $suggests = array_unique($suggests);
+        foreach ($suggests as $value) {
+            $line->data[] = $value;
+        }
+        saveId();
+        echo json_encode($line);
+        break;
+    case 'alarm':
+        $result = json_decode('{"total":0,"musiclist":[]}');
+        $file = fopen("location.txt", "r");
+        $keyword = "";
+        //检测指正是否到达文件的未端
+        $path = getSongPath($value);
+        if ($path == false) {
+            echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+            http_response_code(404);
+            return;
+        }
+        scanAllFile(trim($path), $keyword);
+        fclose($file);
+        // echo json_encode($files);
+        foreach ($files as $valued) {
+            // $line->data[] = $value->filename;
+            $res = $valued->path;
+            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+            $filewithoutext = $valued->filename;
+            $filebasename = basename($filewithoutext);
+            $filepath = dirname($res);
+            $musicid = $valued->id;
+            $pathid = getId($filepath);
+            $singer = substr($filebasename, 0, strpos($filebasename, " - "));
+            if (strpos($filebasename, " - ") != false)
+                $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
+            else $songname = $filebasename;
+            // echo strpos($res, " - ");
+            if (!empty($songname)) {
+                $line->name = $songname;
+                $line->songName = $songname;
+            }
+            if (!empty($musicid)) {
+                $line->rid = $musicid;
+                $line->id = $musicid;
+                $line->musicrid = "MUSIC_" . $musicid;
+            }
+            if (!empty($singer)) {
+                $line->artist = $singer;
+                $line->artistid = base64_encode($singer);
+                $line->artistId = base64_encode($singer);
+            }
+            if (!empty($pathid)) {
+                $line->album = $filepath;
+                $line->albumid = $pathid;
+                $line->albumId = $pathid;
+            }
+            // $result->data->songinfo = $line;
+            $result->musiclist[] = $line;
+            // echo json_encode($line);
+        }
+        saveId();
+        // $result->data->lrclist = $lrc;
+        $result->total = $total;
+        $html = json_encode($result);
+        // http_response_code(404);
+        break;
+    case 'playlist':
+        $result = json_decode('{"data":{"total":0,"musicList":[]}}');
+        $file = fopen("location.txt", "r");
+        $keyword = "";
+        //检测指正是否到达文件的未端
+        $path = getSongPath($value);
+        if ($path == false) {
+            echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+            http_response_code(404);
+            return;
+        }
+        scanAllFile(trim($path), $keyword);
+        fclose($file);
+        // echo json_encode($files);
+        foreach ($files as $valued) {
+            // $line->data[] = $value->filename;
+            $res = $valued->path;
+            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+            $filewithoutext = $valued->filename;
+            $filebasename = basename($filewithoutext);
+            $filepath = dirname($res);
+            $musicid = $valued->id;
+            $pathid = getId($filepath);
+            $singer = substr($filebasename, 0, strpos($filebasename, " - "));
+            if (strpos($filebasename, " - ") != false)
+                $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
+            else $songname = $filebasename;
+            // echo strpos($res, " - ");
+            if (!empty($songname)) {
+                $line->name = $songname;
+                $line->songName = $songname;
+            }
+            if (!empty($musicid)) {
+                $line->rid = $musicid;
+                $line->id = $musicid;
+                $line->musicrid = "MUSIC_" . $musicid;
+            }
+            if (!empty($singer)) {
+                $line->artist = $singer;
+                $line->artistid = base64_encode($singer);
+                $line->artistId = base64_encode($singer);
+            }
+            if (!empty($pathid)) {
+                $line->album = $filepath;
+                $line->albumid = $pathid;
+                $line->albumId = $pathid;
+            }
+            // $result->data->songinfo = $line;
+            $result->data->musicList[] = $line;
+            // echo json_encode($line);
+        }
+        saveId();
+        // $result->data->lrclist = $lrc;
+        $result->data->total = $total;
+        $html = json_encode($result);
+        // http_response_code(404);
+        break;
+    case 'url':
+        
+        $res = getSongPath($value);
+        if ($res == false) {
+            echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+            http_response_code(404);
+            return;
+        }
+        $html = "./apis/getlocalmusic.php?id=" . $value;
+        // echo $html;
+        break;
+    case 'singer':
+        $resu = json_decode('{"musiclist":[],"total":0}');
+        //不break，进入search
+        $valued = base64_decode($value);
+        if ($valued != false)
+            $value = $valued;
+        searchSong($value);
+        $resu->musiclist = $result->data->list;
+        $resu->total = $result->data->total;
+        $html = json_encode($resu);
+        break;
+    case 'search':
+        searchSong($value);
+        $html = json_encode($result);
+        break;
+    case 'folder':
+        $file = fopen("location.txt", "r");
+        $result = json_decode('{"data":{"list":[]}}');
+        while (!feof($file)) {
+            $path = trim(fgets($file));
+            if (trim($path) == '') continue;
+            // echo "<h1>$path</h1>";
+            $line = json_decode('{"name":"","uname":"","userName":"","id":""}');
+            $pathid = getId($path);
+            $line->id = $pathid;
+            $line->name = trim($path);
+            $line->uname = "Local";
+            $line->userName = "Local";
+            $result->data->list[] = $line;
+            // scanAllFile(trim($path), $keyword);
+        }
+        $html = json_encode($result);
+        fclose($file);
+        saveId();
+        break;
+    case 'files':
+        $result = json_decode('{"data":{"total":0,"musicList":[]}}');
+        $file = fopen("location.txt", "r");
+        $keyword = "";
+        //检测指正是否到达文件的未端
+
+        while (!feof($file)) {
+            $path = fgets($file);
+            // echo "<h1>$path</h1>";
+            scanAllFile(trim($path), $keyword);
+        }
+        fclose($file);
+        // echo json_encode($files);
+        foreach ($files as $valued) {
+            // $line->data[] = $value->filename;
+            $res = $valued->path;
+            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+            $filewithoutext = $valued->filename;
+            $filebasename = basename($filewithoutext);
+            $filepath = dirname($res);
+            $musicid = $valued->id;
+            $pathid = getId($filepath);
+            $singer = substr($filebasename, 0, strpos($filebasename, " - "));
+            if (strpos($filebasename, " - ") != false)
+                $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
+            else $songname = $filebasename;
+            // echo strpos($res, " - ");
+            if (!empty($songname)) {
+                $line->name = $songname;
+                $line->songName = $songname;
+            }
+            if (!empty($musicid)) {
+                $line->rid = $musicid;
+                $line->id = $musicid;
+                $line->musicrid = "MUSIC_" . $musicid;
+            }
+            if (!empty($singer)) {
+                $line->artist = $singer;
+                $line->artistid = base64_encode($singer);
+                $line->artistId = base64_encode($singer);
+            }
+            if (!empty($pathid)) {
+                $line->album = $filepath;
+                $line->albumid = $pathid;
+                $line->albumId = $pathid;
+            }
+            // $result->data->songinfo = $line;
+            $result->data->musicList[] = $line;
+            // echo json_encode($line);
+        }
+        saveId();
+        // $result->data->lrclist = $lrc;
+        $result->data->total = $total;
+        $result->data->num = $total;
+        $html = json_encode($result);
+        break;
+    default:
+        echo '{"success":"fail","message":"未知的参数","code":1}';
+        http_response_code(404);
+        return;
+}
+saveId();
+
+echo $html;

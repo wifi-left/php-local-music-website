@@ -1,0 +1,16 @@
+const kwApis = {
+    root: "https://www.kuwo.cn",
+    search: "https://kuwo.cn/api/www/search/searchMusicBykeyWord?key=" + "${key}" + "&pn=${pg}" + "&rn=${pgsize}" + "&httpsStatus=1&reqId=" + reqId,
+    songurl: "http://antiserver.kuwo.cn/anti.s?type=convert_url&rid=${id}" + "&format=mp3&response=url" + "${id}" + "=",
+    songinfo: "http://www.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${id}" + "&httpsStatus=1",
+    kwpicPrefix: "https://img1.kuwo.cn/star/albumcover/",
+    mvplayUrl: "http://www.kuwo.cn/mvplay/",
+    kwplaylist: "http://www.kuwo.cn/api/www/rcm/index/playlist?loginUid=0&httpsStatus=1&",
+    hottopsong: "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=1&rn=30&httpsStatus=1&",
+    searchHelpKey: "https://kuwo.cn/api/www/search/searchKey?key=${value}" + "&httpsStatus=1&",
+    singersongs: "https://search.kuwo.cn/r.s?pn=${pn}&rn=${norpgsize}&artistid=${id}&stype=artist2music&show_copyright_off=1&alflac=1&pcmp4=1&encoding=utf8&plat=pc&vipver=MUSIC_9.1.1.7_W1&devid=19321298&newver=1&pcjson=1",
+    alarmsongs: "https://search.kuwo.cn/r.s?pn=${pn}&rn=${norpgsize}&albumid=${id}&stype=albuminfo&show_copyright_off=1&alflac=1&pcmp4=1&encoding=utf8&plat=pc&vipver=MUSIC_9.1.1.7_W1&devid=19321298&newver=1&pcjson=1",
+    topsong: "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=${pn}&rn=30&httpsStatus=1&reqId=a91f9f50-fa24-11ea-bd02-1f48de173c95",
+    playlist: "http://www.kuwo.cn/api/www/playlist/playListInfo?pid=${id}&pn=${pn}&rn=${norpgsize}",
+    mv: 'http://antiserver.kuwo.cn/anti.s?response=url&rid=MUSIC_${id}&format=mp4&type=convert_url'
+};

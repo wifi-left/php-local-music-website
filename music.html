@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <title>My Music List</title>
+    <style>
+        #list{
+            list-style-type:decimal;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="list"></ul>
+</body>
+<script>
+    var text = `(K)Now_NAME - Baby’s breath
+(K)NoW_NAME - Freesia
+(K)Now_NAME - Morning Glory
+(K)Now_NAME - thyme
+daoko - Forever Friends
+HoneyWorks&水瀬いのり&麻倉もも - 可愛くなりたい
+HoneyWorks&雨宮天 - 可愛くなりたい
+Kiroro - 未来へ
+marina[日] - Fallin’
+moumoon - Hello，shooting-star
+moumoon - Sunshine Girl
+RADWIMPS - あいとわ
+RADWIMPS - うたかた歌
+RADWIMPS - なんでもないや(Movie edit.)
+RADWIMPS - なんでもないや(Movie ver.)
+RADWIMPS - はじめての、東京
+RADWIMPS - スパークル(Movie ver.)
+RADWIMPS - ブリキ
+RADWIMPS - 三葉の通学
+RADWIMPS - 前前前世(Movie ver.)
+RADWIMPS - 占秘館へようこそ
+RADWIMPS - 夜の淵
+RADWIMPS - 夢灯籠
+RADWIMPS - 大丈夫(Movie edit)
+RADWIMPS - 奥寺先輩のテーマ
+RADWIMPS - 家族の時間
+RADWIMPS - 愛にできることはまだあるかい
+RADWIMPS - 秋祭り
+RADWIMPS - 記憶を呼び起こす瀧
+RADWIMPS - 陽菜と、走る帆高
+RADWIMPS - 飛騨探訪
+ReoNa - Untitled world
+Spitz - 春の歌
+sumika - 春夏秋冬
+UA - 水色
+“一起去Rabbit House吧”之歌
+こみっくがーるず - Memories
+サカナクション - 新宝島
+スキマスイッチ - 奏(かなで)
+スキマスイッチ - 奏かなで
+ハピネスアンコール
+三上枝織 - みんなだいすきのうた (大家最爱的歌)
+三浦透子 - グランドエスケープ(Movie edit)
+三浦透子 - 祝祭(Movie edit)
+三輪学 - -遠い空へ-(ヨスガノソラ メインテーマ)
+三輪学 - Old Memory
+下地紫野 - God Save The Girls-(动漫《斯特拉的魔法》OP)
+中島みゆき - Rolling ~ Rollin’ Age
+中島みゆき - Tell Me， Sister
+中島みゆき - あどけない話
+中島みゆき - この世に二人だけ
+中島みゆき - ひとり
+中島みゆき - ひとり上手
+中島みゆき - やまねこ (山猫)
+中島みゆき - わかれうた
+中島みゆき - ヘッドライトテールライト
+中島みゆき - ルージュ (口红)
+中島みゆき - ローリング
+中島みゆき - 一夜草 (いちやそう)
+中島みゆき - 一期一会
+中島みゆき - 北国之春
+中島みゆき - 地上の星
+中島みゆき - 孤独の肖像
+中島みゆき - 帰省
+中島みゆき - 幸せ
+中島みゆき - 幽霊交差点
+中島みゆき - 恩知らず
+中島みゆき - 恶女
+中島みゆき - 愛される花 愛されぬ花
+中島みゆき - 旅人のうた
+中島みゆき - 时代
+中島みゆき - 春なのに
+中島みゆき - 最愛
+中島みゆき - 树高千丈 落叶帰根
+中島みゆき - 樹高千丈 落葉帰根
+中島みゆき - 氷中花
+中島みゆき - 浅い眠り
+中島みゆき - 清流
+中島みゆき - 爱される花爱されぬ花 (被爱的花和不被爱的花)
+中島みゆき - 真夜中の動物園
+中島みゆき - 空と君のあいだに
+中島みゆき - 竹の歌
+中島みゆき - 糸
+中島みゆき - 见返り美人
+中島みゆき - 銀の龍の背に乗って
+中島みゆき - 雪傘(Bonus Track)
+中西亮輔 - 有哉と美月
+久石譲 - Summer
+久石让 - Spring
+十三叔 - unravel(原版)
+回过头会发现月亮，不对是团子。
+大事MANブラザーズバンド - それが大事
+大橋卓弥 - ありがとう
+大石昌良 - 君じゃなきゃダメみたい
+宇多田ヒカル - One Last Kiss
+宫本笑里&前川真悟&新川雅啓 - ステイウィズミー
+小瀬村晶 - Light Dance
+川井憲次 - 骑士王の夸り
+平井堅 - Gaining Through Losing
+広瀬すず - 瑠璃色の地球
+心动Poporon
+戸田色音 - 藤宮さんの日記
+新世纪福音战士 - 今日の日はさようなら
+新田恵海 - 探求Dreaming
+早見沙織 - うさぎになったバリスタ
+昆夏美 - 虹のかけら
+星野源 - 喜劇
+本渡楓 - 涙はみせない
+松本　伊代 - 抱きしめたい
+松谷卓 - お泊まり旅行
+松谷卓 - スイートルーム
+松谷卓 - 扉の向こう
+松谷卓 - 最後の質問
+林ゆうき - ヒカリヘ(acoustic guitar version)
+林ゆうき - ヒカリヘ(piano version)
+根岸貴幸 - ほえ
+森山良子 - 今日の日はさようなら
+椎名豪&中川奈美 - 灶门炭治郎之歌
+水濑祈 - 木もれび青春譜
+水谷広実 - いいのかな？
+水谷広実 - 小さな坂道
+漫画女孩 - Memories
+田中ちえ美 - 瑞池祭「龍の唄」演劇 -急-
+矶村由纪子 - 樱花
+矶村由纪子 - 穿过夜空的爱
+矶村由纪子 - 绯红的华尔街
+矶村由纪子 - 草原之泪
+矶村由纪子 - 青色的拂晓
+磯村由紀子 - サクラ
+磯村由紀子 - 夢
+磯村由紀子 - 樱花
+磯村由紀子 - 漫漫千里行
+磯村由紀子 - 紫阳花
+磯村由紀子 - 緋のワルツ
+磯村由紀子 - 草原の涙
+磯村由紀子 - 風の住む街(Short Version)
+磯村由紀子 - 風の住む街
+神前暁 - これがオタクの生きる道
+神前暁 - しでの鸟
+神前暁 - ひととき
+神前暁 - やっはろー!
+神前暁 - 何かがおかしい
+神前暁 - 幼なじみ
+神前暁 - 誠に遺憾ながら、知り合い？
+神前暁 - 骨折り損
+神前暁、高田龍一 - いつもの風景から始まる物語
+福山雅治 - milk tea
+秦基博 - Rain
+米津玄师 - orion
+米津玄师&daoko - 打上花火
+米津玄師 - Lemon
+花澤香菜 - 恋愛サーキュレーション
+藤原さくら - 春の歌
+銀のスプーン Blend of Memory
+鎖那 - 可愛くなりたい
+雨宮天 - 奏 (かなで)
+高橋優 - CANDY
+高橋優 - I Love You
+高橋優 - one stroke
+高橋優 - さくらのうた
+高橋優 - ヤキモチ
+高橋優 - 卒業
+高橋優 - 少年であれ
+高橋優 - 旅路の途中`;
+    var a = text.replaceAll("\r","").split("\n");
+    var code = ``;
+    for (var i in a) {
+        code += `<li><a href="./index.html?search=${encodeURIComponent(a[i])}">${a[i]}</a></li>`
+    }
+    list.innerHTML = code;
+</script>
+
+</html>

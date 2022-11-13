@@ -1,0 +1,24 @@
+/* writing-mode:vertical-lr */
+#lrc-top{
+    position: absolute;
+    bottom:calc(50%);
+    writing-mode:unset;
+    color: var(--sellrccolor);
+    left:36px;
+    right:36px;
+    
+    top:unset;
+    font-size:var(--selfontsize);
+    line-height: var(--sellineheight);
+}
+#lrc-bottom{
+    position: absolute;
+    top:calc(50%);
+    color: var(--norlrccolor);
+    writing-mode:unset;
+    left:36px;
+    right:36px;
+    /* top:unset; */
+    line-height: var(--sellineheight);
+    font-size:var(--selfontsize);
+}

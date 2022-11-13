@@ -1,0 +1,308 @@
+#leftbar {
+    background-color: rgb(233, 233, 233);
+}
+
+.barlist-hover {
+    background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.imgbutton:hover {
+    background-color: rgba(27, 27, 27, 0.5);
+}
+
+.imgbutton:active {
+    background-color: rgba(24, 24, 24, 0.5);
+}
+
+#barlist #main {
+    background-image: url("../../img/index_dark.png");
+}
+
+#barlist #search {
+    background-image: url("../../img/search_dark.png");
+
+}
+
+.deletemusic {
+    background-image: url("../../img/delete_dark.png");
+}
+
+#barlist #music {
+    background-image: url("../../img/music_dark.png");
+
+}
+
+#barlist #setting {
+    background-image: url("../../img/setting_dark.png");
+
+}
+
+#barlist #mv {
+    background-image: url("../../img/mv_dark.png");
+
+}
+
+#barlist #manage {
+    background-image: url("../../img/info_dark.png");
+
+}
+
+#barlist #mylove {
+    background-image: url("../../img/love_dark.png");
+
+}
+
+#barlist #download {
+    background-image: url("../../img/download_dark.png");
+
+}
+
+#barlist .main {
+    background-image: url("../../img/index_dark.png");
+
+
+}
+
+#barlist #mulitirow {
+    background-image: url("../../img/mulitirow_dark.png");
+
+}
+
+.ssearch {
+    background-image: url("../../img/search_dark.png");
+
+}
+
+.ssetting {
+    background-image: url("../../img/setting_dark.png");
+
+}
+
+.smylove {
+    background-image: url("../../img/love_dark.png");
+
+}
+
+.smanage {
+    background-image: url("../../img/info_dark.png");
+
+}
+
+.smusiclist {
+    background-image: url("../../img/manage_dark.png");
+
+}
+
+.sdownload {
+    background-image: url("../../img/download_dark.png");
+
+}
+
+#barlist #inserthead {
+    background-image: url("../../img/insert_dark.png");
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+b,
+em,
+div,
+#searchBox,
+span {
+    color: #333;
+}
+
+.alertBox .bcontent {
+    background-color: white;
+}
+
+.button,
+.inputs {
+    color: #333;
+    border: 2px solid rgb(87, 87, 87);
+    background-color: rgb(233, 233, 233);
+}
+
+.button:hover {
+    color: #333;
+    border: 2px solid rgb(41, 41, 41);
+    background-color: rgb(199, 199, 199);
+}
+
+.inputs:hover,
+.inputs:focus {
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(211, 211, 211);
+}
+
+.button:active {
+    border: 2px solid rgb(3, 3, 3) !important;
+    /* outline: none; */
+    /* padding: 6px 6px 6px 6px; */
+    /* color: rgb(230, 230, 230); */
+    background-color: rgb(160, 160, 160) !important;
+    /* background-color: rgb(17, 17, 17); */
+}
+
+#bg {
+    background-color: rgb(244, 244, 244);
+}
+
+#searchQuick {
+    border-bottom: 2px solid black;
+}
+
+#fillinfo {
+    border: 2px solid rgb(46, 46, 46);
+}
+
+#fillinfo li {
+    background-color: rgb(238, 238, 238);
+}
+
+#fillinfo li:hover {
+    background-color: rgb(204, 204, 204);
+}
+
+#fillinfo li:active {
+    background-color: rgb(163, 163, 163);
+}
+
+#selectBar {
+    background-color: rgb(14, 14, 14);
+}
+
+.li-like {
+    vertical-align: middle;
+    /* position: relative;
+    /* top: 16px; */
+    /* width: 40px;
+    height: 40px; */
+    display: inline-block;
+    background-image: url("../../img/love_dark.png");
+    /* position: absolute; */
+    /* right: 16px;
+    top: 36px; */
+    border: none;
+}
+
+.li-play {
+    vertical-align: middle;
+    /* position: relative;
+    /* top: 16px; */
+    /* width: 40px;
+    height: 40px; */
+    display: inline-block;
+    background-image: url("../../img/play_dark.png");
+    /* position: absolute; */
+    /* right: 16px;
+    top: 36px; */
+    border: none;
+}
+
+.li-download {
+    vertical-align: middle;
+    /* position: relative;
+    /* top: 16px; */
+    /* width: 40px;
+    height: 40px; */
+    display: inline-block;
+    background-image: url("../../img/share_dark.png");
+    /* position: absolute; */
+    /* right: 16px;
+    top: 36px; */
+    border: none;
+}
+
+#ssingername {
+    color: rgb(53, 53, 53);
+}
+
+.barlist:hover {
+    text-align: center;
+
+    background-size: 32px 32px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-color: rgba(197, 197, 197, 0.5);
+}
+
+.barlist:active {
+
+    background-size: 32px 32px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-color: rgba(150, 150, 150, 0.5);
+}
+
+.messages-text {
+    color: #333;
+    padding: 12px 12px 12px 12px;
+    vertical-align: middle;
+    height: auto;
+    width: calc(100% - 88px);
+    display: inline-block;
+    background-color: rgb(231, 231, 231);
+}
+
+.list-singer-2 {
+    color: rgb(88, 88, 88);
+}
+
+.xfc_content {
+    background-color: rgba(251, 251, 251, 1);
+}
+
+#pagesel1 .pgid {
+    background-color: rgb(197, 197, 197);
+}
+
+#pagesel1 .pgid:hover {
+    background-color: rgb(160, 160, 160);
+}
+
+#pagesel1 .pgid:active {
+    background-color: rgb(109, 107, 107);
+}
+
+#pagesel .pgid {
+    background-color: rgb(197, 197, 197);
+}
+
+#pagesel .pgid:hover {
+    background-color: rgb(160, 160, 160);
+}
+
+#pagesel .pgid:active {
+    background-color: rgb(109, 107, 107);
+}
+
+.progress {
+    display: inline-block;
+    height: 24px;
+    width: 100%;
+    margin-top: 20px;
+    border: 2px solid rgb(66, 66, 66);
+    padding: 2px 2px 2px 2px;
+    transition: 150ms;
+    overflow: hidden;
+    /* transition-timing-function:  */
+}
+
+#music-loading {
+    background-color: #fff;
+}
+
+.progress .done {
+    height: 100%;
+    width: 0%;
+    background-color: rgb(37, 37, 37);
+    position: unset;
+
+
+}

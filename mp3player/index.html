@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Bamboo Gamom's Music Manager</title>
+    <style>
+        #pre-loadding {
+            z-index: 1145149;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: calc(100%);
+            height: calc(100%);
+            text-align: center;
+            background-color: #00ffbf;
+        }
+
+        #pre-loading-text {
+            display: none;
+        }
+
+        #pre-loadding * {
+            color: #333;
+        }
+
+        #music-loading {
+            z-index: 9999;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: calc(100%);
+            height: calc(100%);
+            text-align: center;
+            /* background-color: #00ffbf; */
+        }
+    </style>
+    <link href="../index.css" rel="stylesheet">
+    <link href="./mp3p.css" rel="stylesheet">
+
+    <script src="../lib/gquery.js">
+    </script>
+    <script src="./preload.js">
+    </script>
+
+</head>
+
+<body>
+    <div id="pre-loadding">
+        <div id="pre-loading-text" class="Mcenter">
+            <h1>
+                Bamboo Music
+            </h1>
+            <p id="loadsub1">我们正在尝试连接您本地的MP3播放器</p>
+            <span id="loadsub2">注意：只有我们支持的API才有效</span>
+        </div>
+        <div id="pre-fail-text" class="Mcenter">
+            <h1>
+                Bamboo Music
+            </h1>
+            <p>很抱歉地告诉您，我们不支持您的浏览器。</p>
+            <span>根据代码检测，您的浏览器不支持我们所使用的 gQuery</span>
+        </div>
+    </div>
+    <div id="bg">
+        <div id="musicpane" tabindex="0">
+            <button id="lastsong" onclick="songchange(false);" class="button">上一曲</button>
+            <button id="pause" onclick="pause();" class="button">暂停</button>
+            <button id="play" onclick="play();" class="button">播放</button>
+            <button id="nextsong" onclick="songchange(true);" class="button">下一曲</button><br/>
+            <div id="rangebox">
+                <input onmousedown="onmove=true;" onmouseup="onmove=false;" onblur="onmove=false;" id="progressset" onchange="settime(this.value);" type="range" min="0" max="10000" step="0" />
+            </div>
+        </div>
+        <div id="leftbar">
+            <div id="iconbar">
+
+            </div>
+            <div id="icontitle">
+
+            </div>
+            <div id="selectBar">
+
+            </div>
+            <div id="barlist">
+                <div onclick="showPage(this);" id="music" class="barlist" tabindex="0">
+
+                </div>
+
+                <!-- <div onclick="showPage(this);" id="download" class="barlist"> -->
+                <!-- </div> -->
+
+
+                <div onclick="showPage(this);" id="setting" class="barlist" tabindex="0">
+
+                </div>
+
+                <div class="hr2" id="barlist-hr"></div>
+                <div onclick="LRCmuliti_Temp(!ismulitirow);" id="mulitirow" class="barlist" title="是否开启双列歌词模式"
+                    tabindex="0">
+
+                </div>
+                <div onclick="insertHead();" id="inserthead" class="barlist" title="是否在歌词最前面插入空歌词（对其歌词）" tabindex="0">
+
+                </div>
+
+            </div>
+
+        </div>
+        <div id="content">
+
+            <div id="errorPage" class="page">
+                <div class="Mcenter">
+                    <h1>Ooops! 程序出错了！</h1>
+                    <p>请等待修复。</p>
+                    <!-- <a class="buttona" onclick="showError(this);" id="showerror" style="display: none;">显示更多 ></a>
+                    <div class="canCopy" id="errormsg" style="display: none;"></div> -->
+                </div>
+
+            </div>
+            <div id="pmusic" class="page" style="display:inline-block">
+                <div id="music-loading">
+                    <div class="Mcenter">
+                        <h1>
+                            Bamboo Music Player - Offline Control
+                        </h1>
+                        <p id="musicloadingtip1">正在获取您本地播放的音乐信息</p>
+                        <span id="musicloadingtip2">请稍后 ...<div class=""></div></span>
+                    </div>
+
+                </div>
+                <div id="sinfo">
+                    <img id="sinfoimg" src="../img/unknown-record.png" />
+                    <div id="sinfotext">
+                        <span id="ssongname" style="cursor: text;" mid="0">
+                            无歌曲播放
+                        </span>
+                        <span id="ssingername">
+
+                        </span><br /><span style="font-size:12px;"><span>推测歌曲语言为：</span><span
+                                id="languagename">未知</span></span>
+
+                        </span><span style="margin-left: 8px;font-size:12px;" id="textmusicmv" tabindex="0">
+                            MV地址：<a id="mmvurl" href="">
+                                暂无
+                            </a>
+                        </span><br />
+                        <span style="font-size:12px;" id="textmusicurl">
+                            歌曲地址：<a target="_blank" id="mshowurl" href="" tabindex="0">
+                                【点击打开】
+                            </a>&nbsp;
+                            <a tabindex="0" target="_blank" id="mdownloadlrc" href="data:text/plain;charset=utf-8,">
+                                【下载歌词】
+                            </a>
+                        </span>
+
+
+                    </div>
+
+                </div>
+                <div id="effect">
+                    <canvas id="effcan">
+
+                    </canvas>
+                </div>
+                <div id="musiclrcshow">
+                    <div id="lrc-top"></div>
+                    <div id="lrc-bottom"></div>
+                    <div id="lrycishow">
+                        <div class="lrc-line">
+                            There are no lyrics here now!
+                        </div>
+                        <div class="lrc-line">
+                            此处暂时无歌词。
+                        </div>
+                        <!-- <div class="lrc-line">
+                        c d e
+                    </div>
+                    <div class="lrc-line-sel">
+                        f g h
+                    </div>
+                    <div class="lrc-line">
+                        i j k
+                    </div> -->
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="psetting" class="page">
+                <h1>
+                    <div class="img ssetting" style="vertical-align:middle;display:inline-block"></div>设置
+                    <div class="hr"></div>
+                </h1>
+                <h3>
+                    配置样例
+                </h3>
+                <button class="button" onclick="configSaver();">保存当前配置</button>
+                <div id="configList">
+
+                </div>
+
+                <h3>播放设置</h3>
+                <span>重新播放歌曲生效</span><br />
+                <button class="button" onclick="program.setConfig('effect',true);">启用特效</button>
+                <button class="button" onclick="program.setConfig('effect',false);efftype = 0;">禁用特效</button>
+
+                <h3>歌词设置</h3>
+                <h4>正常滚动歌词设置</h4>
+                <span>滚动歌词显示设置</span><br />
+                <button class="button" onclick="hideMainLrc(false);">显示</button>
+                <button class="button" onclick="hideMainLrc(true);">隐藏</button>
+                <br />
+                <span>默认歌词两列模式</span><br />
+                <button class="button" onclick="LRCmuliti(0);">自动检测（电脑用户建议）</button>
+                <button class="button" onclick="LRCmuliti(1);">默认开启</button>
+                <button class="button" onclick="LRCmuliti(2);">默认关闭（手机用户建议）</button>
+                <br />
+                <!-- // --norlrccolor: rgb(209, 209, 209);
+                // --sellrccolor: rgb(23, 236, 148);
+                // --norlineheight: 28px;
+                // --sellineheight: 40px;
+                // --norfontsize: 16px;
+                // --selfontsize: 24px; -->
+                <span>普通歌词颜色：</span><input class="inputs" id='norlrccolor' type='text' /><input type="color"
+                    class="button" onchange="document.getElementById('norlrccolor').value = this.value;" /><br />
+                <span>普通歌词行高（间距）：</span><input class="inputs" id='norlineheight' type='text' /><br />
+                <span>普通歌词字体大小：</span><input class="inputs" id='norfontsize' type='text' /><br />
+                <span>选中歌词颜色：</span><input class="inputs" id='sellrccolor' type='text' /><input type="color"
+                    class="button" onchange="document.getElementById('sellrccolor').value = this.value;" /><br />
+                <span>选中歌词行高（间距）：</span><input class="inputs" id='sellineheight' type='text' /><br />
+                <span>选中歌词字体大小：</span><input class="inputs" id='selfontsize' type='text' /><br />
+                <button class="button" onclick="saveLrcConfig();">保存歌词设置</button>
+
+                <div class="lrc-line-show">
+                    预览 Line Normal Text
+                </div>
+                <div class="lrc-line-sel-show">
+                    预览 Line Selected
+                </div>
+                <h4>特殊歌词设置</h4>
+                <span>特殊歌词显示方式</span><br />
+                <button class="button" onclick="specLrcStyle(0);">无</button>
+                <button class="button" onclick="specLrcStyle(1);">横（左上+右下）</button>
+                <button class="button" onclick="specLrcStyle(2);">竖（左上+右下）</button>
+                <button class="button" onclick="specLrcStyle(3);">竖居中（左+右）</button>
+                <button class="button" onclick="specLrcStyle(4);">横居中（底部）</button>
+                <button class="button" onclick="specLrcStyle(5);">横居中（居中）</button>
+
+                <h3>动画设置</h3>
+                <button class="button" onclick="GUIAni(false);">禁用界面切换动画</button>
+                <button class="button" onclick="GUIAni(true);">启用界面切换动画</button>
+                <br />
+                <button class="button" onclick="LRCSPECAni(false);">禁用特殊歌词切换动画</button>
+                <button class="button" onclick="LRCSPECAni(true);">启用特殊歌词切换动画</button>
+                <h3>界面设置</h3>
+                <button class="button" onclick="GUIdark(false);">浅色界面模式</button>
+                <button class="button" onclick="GUIdark(true);">深色界面模式</button>
+                <br />
+
+                <br />
+                <span>用户自定义 CSS</span><br /><br />
+                <div id="editor" contenteditable="true"></div>
+                <button class="button" onclick="saveUserCSS();">保存并预览</button>
+                <h3>危险区</h3>
+                <span>界面隐藏</span><br />
+                <button class="button" onclick="hideGUI()">隐藏大部分无关 GUI 界面（纯播放模式，启用后仅刷新可重置）</button>
+                <br />
+                <button class="button" onclick="showPage(document.getElementById('music'));">切换到音乐播放界面</button>
+
+                <br /><br />
+                <span>配置管理</span><br />
+                <button class="button" onclick="resetConfig(false)">重置设置</button>
+                <button class="button" onclick="resetConfig(true)">删除此设置</button><br /><br />
+                <span>本地存储管理（请注意，这些设置在本网站全部生效！）</span><br />
+                <button class="button" onclick="clearLocalStorage(0)">重置用户自定义设置列表</button>
+
+                <div class="hr"></div>
+                <h1>关于</h1>
+
+                当前版本：
+                <script>
+                    var infom = program.getinfo();
+                    document.write(infom.package.version);
+                </script>
+                <br />
+                作者：
+                <script>
+
+                    document.write(infom.package.author);
+                </script>
+                <br />
+                <div class="hr2"></div>
+                您使用的浏览器版本：
+                <script>
+                    document.write(infom.process.version);
+                </script>
+                <div class="hr"></div>
+                <h1>相关日志</h1>
+                <span>如果出现错误请向管理员提供该内容。</span>
+                <br /><br />
+                <details>
+                    <summary>运行日志</summary>
+                    <div class="copyable" id="log_display" tabindex="0">
+                    </div>
+                </details>
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <div id="messagebox"></div>
+    <div id="alertBox">
+
+    </div>
+    <!-- <div class="alertBox c-prompt">
+            
+        </div>
+        <div class="alertBox c-alert">
+            
+        </div> -->
+    <script src="./index.js">
+
+    </script>
+
+    <script>
+
+    </script>
+</body>
+
+</html>
