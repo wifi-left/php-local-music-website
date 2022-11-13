@@ -23,8 +23,14 @@ if (!empty($_GET['limit'])) {
 // $url = str_replace("\~", "%7E", $url);
 $headers = "";
 $value = urldecode($value);
-if ($offset < 0) $offset = 0;
-if ($limit < 1) $offset = 10;
+if($type != 'alarm'){
+    if ($offset < 1) $offset = 1;
+    if ($limit < 1) $offset = 10;
+}else{
+    if ($offset < 0) $offset = 0;
+    if ($limit < 1) $offset = 10;
+}
+
 $page = (int)$offset - 1;
 $offsets = ((int)$offset - 1) * ((int)$limit);
 $html = "";
