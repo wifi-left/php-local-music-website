@@ -83,7 +83,7 @@ function scanAllFile($path, $filter = "*.*", $needtotal = true)
                 if (!$needtotal)
                     return;
             if (is_dir($path . '\\' . $value)) {
-                getId($path . '\\' . $value, 1);
+                getId($path . '\\' . $value, 0);
                 scanAllFile($path . '\\' . $value, $filter, $needtotal); //继续遍历
             } else if (fnmatch("*.mp3", $value)) if (stristr($value, $filter) != false) if (is_file($path . '\\' . $value)) {
                 $GLOBALS['total'] += 1;

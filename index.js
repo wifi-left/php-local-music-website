@@ -3000,12 +3000,12 @@ function clearLocalStorage_Yes(type = 0) {
         _SETTINGList = defaultConfigsList;
     } else if (type == 1) {
         // 收藏夹
-        localStorage.removeItem("lovesongs");
+        localStorage.removeItem("lovesongss");
         LoveSongs = {};
     } else {
         _SETTINGList = defaultConfigsList;
         //全部删除
-        localStorage.removeItem("lovesongs");
+        localStorage.removeItem("lovesongss");
         localStorage.removeItem("userconfigs");
         localStorage.removeItem("defaultconfigs");
         _SETTING = {};

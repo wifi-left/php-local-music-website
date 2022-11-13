@@ -40,7 +40,7 @@ ENDTEST
 //reqId=a91f9f50-fa24-11ea-bd02-1f48de173c95
 const defaultCSS = ``;
 try {
-    LoveSongs = JSON.parse(localStorage.getItem("lovesongs"));
+    LoveSongs = JSON.parse(localStorage.getItem("lovesongss"));
     _SETTING = JSON.parse(localStorage.getItem("defaultconfigs"));
 } catch (e) {
     console.log("出现错误，在初始化时：")
@@ -87,7 +87,7 @@ function saveConfig() {
     else {
         _SETTINGList[_SETTINGIDX] = _SETTING;
     }
-    localStorage.setItem("lovesongs", JSON.stringify(LoveSongs));
+    localStorage.setItem("lovesongss", JSON.stringify(LoveSongs));
     localStorage.setItem("userconfigs", JSON.stringify(_SETTINGList));
     reloadUserCSS();
     // if (_SETTING == null) _SETTING = {};

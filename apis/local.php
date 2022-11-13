@@ -23,9 +23,9 @@ if (!empty($_GET['limit'])) {
 // $url = str_replace("\~", "%7E", $url);
 $headers = "";
 $value = urldecode($value);
-if ($offset < 1) $offset = 1;
+if ($offset < 0) $offset = 0;
 if ($limit < 1) $offset = 10;
-$page = $offset - 1;
+$page = (int)$offset - 1;
 $offsets = ((int)$offset - 1) * ((int)$limit);
 $html = "";
 $result = json_decode('{}');
@@ -91,7 +91,7 @@ function searchSong($value)
 switch ($type) {
     case 'info':
         $result = json_decode('{"data":{"lrclist":[],"songinfo":{}}}');
-        
+
         $res = getSongPath($value);
         if ($res == false) {
             echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
@@ -118,7 +118,7 @@ switch ($type) {
 
         $lrc = LRCTOOBJ($lrcstr);
 
-        
+
         $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
         $filebasename = basename($filewithoutext);
         $filepath = dirname($res);
@@ -196,6 +196,8 @@ switch ($type) {
             http_response_code(404);
             return;
         }
+        $page+=1;
+        // $offset;
         scanAllFile(trim($path), $keyword);
         fclose($file);
         // echo json_encode($files);
@@ -253,6 +255,7 @@ switch ($type) {
             http_response_code(404);
             return;
         }
+        
         scanAllFile(trim($path), $keyword);
         fclose($file);
         // echo json_encode($files);
@@ -300,7 +303,7 @@ switch ($type) {
         // http_response_code(404);
         break;
     case 'url':
-        
+
         $res = getSongPath($value);
         if ($res == false) {
             echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
