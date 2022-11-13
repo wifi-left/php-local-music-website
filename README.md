@@ -25,3 +25,8 @@ ID 缓存地址：`/apis/idcache.json`
 # 客户端配置
 
 存储在 LocalStorage 中。网页大部分设置可以在网页上的设置页面中修改。
+
+# 引用
+
+**gQuery** by Ganxiaozhe
+**ace.js** by ajaxorg
