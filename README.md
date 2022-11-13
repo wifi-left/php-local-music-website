@@ -29,4 +29,5 @@ ID 缓存地址：`/apis/idcache.json`
 # 引用
 
 **gQuery** by Ganxiaozhe
-**ace.js** by ajaxorg
+
+**ace.js** by ajaxorg (代码编辑器)
