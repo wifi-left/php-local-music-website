@@ -23,10 +23,10 @@ if (!empty($_GET['limit'])) {
 // $url = str_replace("\~", "%7E", $url);
 $headers = "";
 $value = urldecode($value);
-if($type != 'alarm'){
+if ($type != 'alarm') {
     if ($offset < 1) $offset = 1;
     if ($limit < 1) $offset = 10;
-}else{
+} else {
     if ($offset < 0) $offset = 0;
     if ($limit < 1) $offset = 10;
 }
@@ -56,6 +56,13 @@ function searchSong($value)
         // $line->data[] = $value->filename;
         $res = $valued->path;
         $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+        $filewithoutext = substr($res, 0, strrpos($res, "."));
+        $mvres = $filewithoutext . '.mp4';
+        if (is_file($mvres)) {
+            $line->rid = $value;
+            $line->hasmv = 1;
+        }
+
         $filewithoutext = $valued->filename;
         $filebasename = basename($filewithoutext);
         $filepath = dirname($res);
@@ -106,6 +113,7 @@ switch ($type) {
         }
         $filewithoutext = substr($res, 0, strrpos($res, "."));
         $lrcres = $filewithoutext . '.lrc';
+        $mvres = $filewithoutext . '.mp4';
         if (is_file($lrcres)) {
             $lrctext = file_get_contents($lrcres);
 
@@ -114,6 +122,7 @@ switch ($type) {
             if ('cp936' == $charset) {
                 $charset = 'GBK';
             }
+            $lrcstr = $lrctext;
             if ("utf-8" != $charset) {
                 $lrcstr = iconv($charset, "UTF-8//IGNORE", $lrctext);
             }
@@ -121,11 +130,14 @@ switch ($type) {
         } else {
             $lrcstr = "";
         }
-
         $lrc = LRCTOOBJ($lrcstr);
 
 
         $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+        if (is_file($mvres)) {
+            $line->hasmv = 1;
+            $line->rid = $value;
+        }
         $filebasename = basename($filewithoutext);
         $filepath = dirname($res);
         $musicid = getId($res);
@@ -165,27 +177,32 @@ switch ($type) {
         $line = json_decode('{"code":200,"data":[]}');
         $keyword = $value;
         //检测指正是否到达文件的未端
-        $limit = 10;
+        $limit = 12;
         $page = 0;
         while (!feof($file)) {
             $path = fgets($file);
             // echo "<h1>$path</h1>";
-            scanAllFile(trim($path), $keyword, false);
+            scanAllFile(trim($path), $keyword, false, true);
         }
         fclose($file);
         $suggests = array();
+        $count = 0;
         foreach ($files as $value) {
             $val = $value->filename;
-            $singer = substr($val, 0, strpos($val, " - "));
-            $songname = substr($val, strpos($val, " - ") + 3);
-            if (strstr($singer, $keyword) != false) {
+            $singer = substr($val, 0, stripos($val, " - "));
+            $songname = substr($val, stripos($val, " - ") + 3);
+            if (stristr($singer, $keyword) != false) {
                 $suggests[] = $singer;
-            } else if (strstr($songname, $keyword) != false) {
+            } else if (stristr($songname, $keyword) != false) {
                 $suggests[] = $songname;
             }
+            // $suggests[] = $songname;
+
         }
         $suggests = array_unique($suggests);
         foreach ($suggests as $value) {
+            $count++;
+            if ($count > 10) break;
             $line->data[] = $value;
         }
         saveId();
@@ -202,7 +219,7 @@ switch ($type) {
             http_response_code(404);
             return;
         }
-        $page+=1;
+        $page += 1;
         // $offset;
         scanAllFile(trim($path), $keyword);
         fclose($file);
@@ -261,7 +278,7 @@ switch ($type) {
             http_response_code(404);
             return;
         }
-        
+
         scanAllFile(trim($path), $keyword);
         fclose($file);
         // echo json_encode($files);
@@ -307,6 +324,15 @@ switch ($type) {
         $result->data->total = $total;
         $html = json_encode($result);
         // http_response_code(404);
+        break;
+    case 'mv':
+        $res = getSongPath($value);
+        if ($res == false) {
+            echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+            http_response_code(404);
+            return;
+        }
+        $html = "./apis/getlocalmusic.php?type=mp4&id=" . $value;
         break;
     case 'url':
 

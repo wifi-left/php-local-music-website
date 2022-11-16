@@ -13,9 +13,9 @@ const languageNameList = [
 
 const localApis = {
     root: location,
-    search: location.origin + location.pathname + "apis/local.php?type=search&value=${key}&offset=${pg}&limit=${pgsize}",
-    songurl: location.origin + location.pathname + "apis/local.php?type=url&value=${id}",
-    songinfo: location.origin + location.pathname + "apis/local.php?type=info&value=${id}",
+    search: location.origin + location.pathname + "/apis/local.php?type=search&value=${key}&offset=${pg}&limit=${pgsize}",
+    songurl: location.origin + location.pathname + "/apis/local.php?type=url&value=${id}",
+    songinfo: location.origin + location.pathname + "/apis/local.php?type=info&value=${id}",
     kwpicPrefix: "",
     mvplayUrl: location.origin + location.pathname + "/apis/void.json",
     kwplaylist: location.origin + location.pathname + "/apis/local.php?type=folder",
@@ -24,7 +24,7 @@ const localApis = {
     singersongs: location.origin + location.pathname + "/apis/local.php?type=singer&value=${id}&offset=${pn}&limit=${norpgsize}",
     alarmsongs: location.origin + location.pathname + "/apis/local.php?type=alarm&value=${id}&offset=${pn}&limit=${norpgsize}",
     topsong: location.origin + location.pathname + "/apis/local.php?type=files&limit=30&offset=${pn}",
-    mv: location.origin + location.pathname + "/apis/void.json",
+    mv: location.origin + location.pathname + "/apis/local.php?type=mv&value=${id}",
     playlist: location.origin + location.pathname + "/apis/local.php?type=playlist&value=${id}&offset=${pn}&limit=${norpgsize}"
 }
 var MusicApis = localApis;

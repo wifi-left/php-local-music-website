@@ -17,6 +17,26 @@
     overflow-y: auto;
 }
 
+#sinfo a {
+    word-break: break-all;
+    /* word-break: normal; */
+    overflow: hidden;
+    /* display:inline-block; */
+    vertical-align:middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#sinfo span {
+    word-break:break-all;
+    /* word-break: normal; */
+    overflow: hidden;
+    display:inline-block;
+    vertical-align:middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 #textmusicmv {
     display: inline-block;
 }
@@ -64,7 +84,8 @@
     margin-bottom: 8px;
     display: inline-block;
     font-size: 22px;
-
+    word-break: break-all;
+    width: 100%;
 }
 
 
@@ -72,8 +93,11 @@
 #sinfo #sinfotext {
     margin-top: 16px;
     max-height: 30%;
+    width:100%;
 }
-
+#sinfo #ssingername{
+    display: none;
+}
 #sinfo #sinfotext #spacebeforesinger {
     display: block;
     height: 0;

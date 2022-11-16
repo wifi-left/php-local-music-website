@@ -4,6 +4,10 @@ if (empty($_GET['id'])) {
     http_response_code(403);
     return;
 }
+$type = "music";
+if (!empty($_GET['type'])) {
+    $type = $_GET['type'];
+}
 $value = $_GET['id'];
 $res = getSongPath($value);
 if ($res == false) {
@@ -12,20 +16,25 @@ if ($res == false) {
     return;
 }
 // echo $res;
-if (!is_file($res)) {
-    echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
-    http_response_code(404);
-    return;
-}
+
 
 // 文件名
 $filename = $res;
 
 // 文件路径
 $location = $res;
-
+if ($type != 'music') {
+    $filewithoutext = substr($res, 0, strrpos($res, "."));
+    $location = $filewithoutext . '.' . $type;
+}
+if (!is_file($location)) {
+    echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+    http_response_code(404);
+    return;
+}
 // 后缀
-$extension = substr(strrchr($res, '.'), 1);
+
+$extension = substr(strrchr($location, '.'), 1);
 $mimeType = "audio/mpeg";
 if ($extension == "mp3") {
     $mimeType = "audio/mpeg";
@@ -33,8 +42,15 @@ if ($extension == "mp3") {
     $mimeType = "audio/ogg";
 } else if ($extension == "mp4") {
     $mimeType = "audio/mp4";
+} else if ($extension == "txt") {
+    $mimeType = "text/plain";
+} else if ($extension == "json") {
+    $mimeType = "text/plain";
+} else if ($extension == "lrc") {
+    $mimeType = "text/plain";
+    // echo $extension;
 }
-
+//; charset=gb2312
 $size = filesize($location);
 $time = date('r', filemtime($location));
 
@@ -68,8 +84,8 @@ if (isset($_SERVER['HTTP_RANGE'])) {
 } else {
     header('HTTP/1.1 200 OK');
 }
-
-header("Content-Type: $mimeType");
+if ($mimeType != "text/plain")
+    header("Content-Type: $mimeType");
 header('Cache-Control: public, must-revalidate, max-age=1000');
 // header('Pragma: no-cache');
 header('Accept-Ranges: bytes');
@@ -88,8 +104,24 @@ $cur = $begin;
 
 // 定位指针
 fseek($fm, $begin, 0);
-
+function isUTF8($str)
+{
+    if ($str === mb_convert_encoding(mb_convert_encoding($str, "UTF-32", "UTF-8"), "UTF-8", "UTF-32")) {
+        return true;
+    } else {
+        return false;
+    }
+}
 while (!feof($fm) && $cur <= $end && (connection_status() == 0)) {
-    print fread($fm, min(1024 * 16, ($end - $cur) + 1));
+    $tmp = fread($fm, min(1024 * 16, ($end - $cur) + 1));
+    if ($mimeType == "text/plain") {
+        if (!isUTF8($tmp))
+            $mimeType .= '; charset=gb2312';
+        else {
+            $mimeType .= '; charset=utf-8';
+        }
+        header("Content-Type: $mimeType");
+    }
+    print $tmp;
     $cur += 1024 * 16;
 }

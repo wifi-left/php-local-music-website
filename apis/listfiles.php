@@ -64,7 +64,7 @@ function saveId()
     fwrite($mywritefile, json_encode($GLOBALS['idcaches']));
     fclose($mywritefile);
 }
-function scanAllFile($path, $filter = "*.*", $needtotal = true)
+function scanAllFile($path, $filter = "*.*", $needtotal = true, $suggestMode = false)
 {
     if ($GLOBALS['count'] > ($GLOBALS['page'] + 1) * ($GLOBALS['limit'])) {
         // return;
@@ -84,27 +84,29 @@ function scanAllFile($path, $filter = "*.*", $needtotal = true)
                     return;
             if (is_dir($path . '\\' . $value)) {
                 getId($path . '\\' . $value, 0);
-                scanAllFile($path . '\\' . $value, $filter, $needtotal); //继续遍历
-            } else if (fnmatch("*.mp3", $value)) if (stristr($value, $filter) != false) if (is_file($path . '\\' . $value)) {
-                $GLOBALS['total'] += 1;
-                $GLOBALS['count'] += 1;
-                if ($GLOBALS['count'] > ($GLOBALS['page'] + 1) * ($GLOBALS['limit'])) {
+                scanAllFile($path . '\\' . $value, $filter, $needtotal, $suggestMode); //继续遍历
+            } else {
+                if (fnmatch("*.mp3", $value)) if (stristr($value, $filter) != false) if (is_file($path . '\\' . $value)) {
+                    $GLOBALS['total'] += 1;
+                    $GLOBALS['count'] += 1;
+                    if ($GLOBALS['count'] > ($GLOBALS['page'] + 1) * ($GLOBALS['limit'])) {
 
-                    if (!$needtotal) return;
-                    continue;
-                } else if ($GLOBALS['count'] <= ($GLOBALS['page']) * ($GLOBALS['limit'])) {
-                    // echo $GLOBALS['count'] . '|' . ($GLOBALS['page'] + 1) * ($GLOBALS['limit']) . '<br/>';
-                    continue;
+                        if (!$needtotal) return;
+                        continue;
+                    } else if ($GLOBALS['count'] <= ($GLOBALS['page']) * ($GLOBALS['limit'])) {
+                        // echo $GLOBALS['count'] . '|' . ($GLOBALS['page'] + 1) * ($GLOBALS['limit']) . '<br/>';
+                        continue;
+                    }
+                    // echo $value . '<br/>';
+                    $file = new fileinfo();
+                    $filename = str_replace(strrchr($value, "."), "", $value);
+                    $file->filename = $filename;
+                    $file->path = $path . '\\' . $value;
+
+                    $file->id = getId($path . '\\' . $value, 0);
+                    $GLOBALS['files'][] = $file;
+                    // $GLOBALS['count'] = $GLOBALS['count'] + 1;
                 }
-                // echo $value . '<br/>';
-                $file = new fileinfo();
-                $filename = str_replace(strrchr($value, "."), "", $value);
-                $file->filename = $filename;
-                $file->path = $path . '\\' . $value;
-
-                $file->id = getId($path . '\\' . $value, 0);
-                $GLOBALS['files'][] = $file;
-                // $GLOBALS['count'] = $GLOBALS['count'] + 1;
             }
         }
     }

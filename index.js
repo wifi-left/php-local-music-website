@@ -1025,7 +1025,7 @@ function hilightlrc(idx, push = false) {
     var schheight = document.getElementById("lrycishow").scrollHeight;
     var topBotH = (document.getElementById("bg").clientHeight - 180) / 2 - 20;
     // ScrolltoEx(document.getElementById("lrycishow"), (idx) / oLRC.ms.length * (schheight - bh / 2 + 80) - bh / 2 + 160);
-    ScrolltoEx(document.getElementById("lrycishow"), (idx) / oLRC.ms.length * (schheight - 2 * topBotH + 12 + DEBUG_A) + DEBUG_B + (enableLeftPic ? 0 : 30));
+    ScrolltoEx(document.getElementById("lrycishow"), (idx) / oLRC.ms.length * (schheight - 2 * topBotH + 12 + DEBUG_A) + DEBUG_B + (enableLeftPic ? 12 : 30));
     document.getElementById("lrc-" + idx).classList.add("lrc-line-sel");
     if (specLrc != 0) {
 

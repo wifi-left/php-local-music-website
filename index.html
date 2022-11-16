@@ -177,27 +177,27 @@
                     <div id="sinfotext">
                         <span id="ssongname" onclick="sharemusicID(this.innerText,this.getAttribute('mid'))" mid="0">
                             无歌曲播放
-                        </span>
-                        <span id="ssingername">
+                        </span><span id="ssingername">
 
-                        </span><br />
-                        <span style="font-size:12px;">
-                            歌手：<a id="mshowsinger" href=""
+                        </span>
+                        <br />
+                        <span style="font-size:12px;width: 100%;">
+                            <span class="sinfospan">歌手：</span><a id="mshowsinger" href=""
                                 onclick="opensingerbyid(this.getAttribute('singerid'),this.innerText);">
                                 暂无
                             </a><span id="spacebeforesinger">&nbsp;&nbsp; </span>
-                            专辑：<a id="mshowalb" href=""
+                            <span class="sinfospan">专辑：</span><a id="mshowalb" href=""
                                 onclick="openalarmbyid_true(this.getAttribute('alid'),this.innerText);">
                                 暂无
                             </a>
-                            &nbsp;&nbsp;<span>推测歌曲语言为：</span><span id="languagename">未知</span>
+                            <br/><span>推测歌曲语言为：</span><span id="languagename">未知</span>
                         </span><span style="margin-left: 8px;font-size:12px;" id="textmusicmv" tabindex="0">
-                            MV地址：<a id="mmvurl" href="">
+                            <span class="sinfospan">MV地址：</span><a id="mmvurl" href="">
                                 暂无
                             </a>
                         </span><br />
                         <span style="font-size:12px;" id="textmusicurl">
-                            歌曲地址：<a target="_blank" id="mshowurl" href="" tabindex="0">
+                            <span class="sinfospan">歌曲地址：</span><a target="_blank" id="mshowurl" href="" tabindex="0">
                                 暂无
                             </a>&nbsp;
                             <a tabindex="0"

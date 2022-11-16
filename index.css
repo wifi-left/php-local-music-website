@@ -41,7 +41,7 @@
     line-height: var(--norlineheight);
     text-overflow: ellipsis;
     transition: 0ms;
-    width:100%;
+    width: 100%;
 }
 
 .lrc-line-show {
@@ -950,7 +950,7 @@ h1 {
     /* white-space: normal; */
     word-break: break-all;
     white-space: nowrap;
-    width:100%;
+    width: 100%;
 }
 
 /* #fillinfo */
@@ -1160,10 +1160,12 @@ h1 {
     width: calc(100% - 28px - 152px);
     line-height: 24px;
     height: auto;
+    word-break: break-all;
 }
 
 .list-info2 {
     padding-left: 4px;
+    word-break: break-all;
     display: inline-block;
     /* vertical-align: top; */
     min-height: 24px;
