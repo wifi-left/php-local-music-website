@@ -43,27 +43,27 @@
 
 @media screen and (min-width: 1200px)and (max-width: 1600px) {
     #musiclrcshow {
-        width: calc(70% - 4px);
+        width: calc(70% - 8px);
     }
 
     #sinfo {
-        width: calc(30% - 4px);
+        width: calc(30% - 8px);
     }
 }
 
 @media screen and (max-width: 1200px) {
     #musiclrcshow {
-        width: calc(60% - 4px);
+        width: calc(60% - 8px);
     }
 
     #sinfo {
-        width: calc(40% - 4px);
+        width: calc(40% - 8px);
     }
 }
 
 @media screen and (min-width: 1600px) {
     #musiclrcshow {
-        width: calc(100% - 508px);
+        width: calc(100% - 512px);
     }
 
     #sinfo {

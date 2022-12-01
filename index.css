@@ -8,6 +8,16 @@
     --selfontsize: 24px;
 }
 
+#lrconly {
+    padding: 16px 16px 16px 16px;
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+body {
+    background-color: #333;
+}
+
 #musictext {
     height: 32px;
     line-height: 32px;
@@ -29,6 +39,41 @@
     width: auto;
     display: block;
     overflow: hidden;
+}
+
+#closeLrcOnlyBtn {
+    position: fixed;
+    text-align: center;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0);
+    top: 8px;
+    left: 8px;
+    line-height: 36px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 100ms;
+}
+
+#closeLrcOnlyBtn:hover {
+    background-color: rgb(88, 88, 88);
+}
+
+#closeLrcOnlyBtn:active {
+    background-color: rgb(117, 117, 117);
+}
+
+#lrconly {
+    background-color: #333;
+    /* margin: 0; */
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
 }
 
 .lrc-content {
@@ -1006,10 +1051,13 @@ h1 {
     list-style-type: none;
     background-color: rgb(99, 99, 99);
 }
-
+#lrconly-bottom{
+    display: inline-block;
+    width:100%;
+}
 #messagebox {
     height: auto;
-    position: absolute;
+    position: fixed;
     /*overflow: auto;*/
     max-height: 50%;
     min-width: 360px;
@@ -1565,7 +1613,7 @@ button {
 }
 
 #musicpane {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0px;
     height: 72px;

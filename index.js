@@ -235,7 +235,28 @@ function getQueryString(url, name) {
     var r = url.substring(1).match(reg);
     if (r != null) return decodeURI(r[2]); return null;
 }
+function getalarmidafter(data, text) {
+    if (data['code'] == 404) {
+        showMsg("无法找到该专辑。", "error");
+        return;
+    }
+    if (data != undefined) {
+        openalarmbyid_true(data, text);
+    }
+}
 function searchSongs(val, pg, pgsize) {
+    if (val.substring(0, "[ALARM]".length) == '[ALARM]') {
+        showMsg("获取专辑 ID 中...", "info");
+        var text = val.substring("[ALARM]".length);
+        if (parseInt(text) + "" == text) {
+            openalarmbyid_true(text, "专辑ID：" + text);
+        } else {
+            let urlpath = `http://127.0.0.1/localmusicmanager/apis/local.php?type=getid&value=${encodeURI(text)}`;
+            fetchinfo(urlpath, { csrf: TOKEN_CSRF, referer: MusicApis.root, cookie: "kw_token=" + TOKEN_CSRF + "" }, getalarmidafter, text);
+        }
+        // http://127.0.0.1/localmusicmanager/apis/local.php?type=getid&value=E:\NEWDOWNLOAD
+        return;
+    }
     if (val.substring(0, "http://".length) == 'http://') {
         var text = val.substring(val.lastIndexOf('/') + 1);
         var id = getQueryString(text, "musicid");
@@ -272,7 +293,7 @@ function searchSongs(val, pg, pgsize) {
     showMsg("搜索中...", "info");
 
     let urlpath = (MusicApis.search.replaceAll("${key}", encodeURI_special(val)).replaceAll("${pg}", pg).replaceAll("${pgsize}", pgsize));
-
+    // document.getElementById("listbar").innerHTML = "<p>搜索中...</p>";
     fetchinfo(urlpath, { csrf: TOKEN_CSRF, referer: MusicApis.root, cookie: "kw_token=" + TOKEN_CSRF + "" }, listsong);
 }
 
@@ -921,6 +942,9 @@ function lrcinit() {
     // console.log(event
 
     // });
+    if (document.getElementById("lrconly").style.opacity == 1) {
+        updateLrcOnly();
+    }
 }
 function playfromtime(time) {
     // var time = event.target.getAttribute("time");
@@ -1018,6 +1042,7 @@ function hilightlrc(idx, push = false) {
     if (!push)
         for (var i = 0; i < ele.length; i++) {
             if (ele[i].id == ('lrc-' + idx)) return;
+            if (ele[i].id == ('s-lrc-' + idx)) return;
             ele[i].classList.remove("lrc-line-sel");
         }
     var bh = window.innerHeight;
@@ -1025,8 +1050,32 @@ function hilightlrc(idx, push = false) {
     var schheight = document.getElementById("lrycishow").scrollHeight;
     var topBotH = (document.getElementById("bg").clientHeight - 180) / 2 - 20;
     // ScrolltoEx(document.getElementById("lrycishow"), (idx) / oLRC.ms.length * (schheight - bh / 2 + 80) - bh / 2 + 160);
-    ScrolltoEx(document.getElementById("lrycishow"), (idx) / oLRC.ms.length * (schheight - 2 * topBotH + 12 + DEBUG_A) + DEBUG_B + (enableLeftPic ? 12 : 30));
-    document.getElementById("lrc-" + idx).classList.add("lrc-line-sel");
+
+    try {
+        document.getElementById("lrc-" + idx).classList.add("lrc-line-sel");
+    } catch (e) {
+
+    }
+    if (document.getElementById("lrconly").style.opacity == 1) {
+        try {
+            document.getElementById("s-lrc-" + idx).classList.add("lrc-line-sel");
+
+            var ViewableHeight = document.documentElement.clientHeight;
+            document.getElementById("lrconly-bottom").style.height = (ViewableHeight / 2) + "px";
+            var HTMLHeight = document.querySelector("html").scrollHeight;
+
+            ScrolltoEx(document.querySelector("html"), (idx) / oLRC.ms.length * (HTMLHeight - (ViewableHeight / 2) - 212) - (ViewableHeight) / 2 + 152 + DEBUG_B);
+            // ViewableHeight
+            // console.log(1);
+        } catch (e) {
+            // console.warn(e)lrconly
+        }
+    } else {
+        ScrolltoEx(document.getElementById("lrycishow"), (idx) / oLRC.ms.length * (schheight - 2 * topBotH - 12 + DEBUG_A) + DEBUG_B + (enableLeftPic ? 12 : 30));
+    }
+
+
+
     if (specLrc != 0) {
 
         if (DisabledAnimationLrc) {
@@ -3145,4 +3194,48 @@ function changeSource(source) {
 function saveSource(source) {
     program.setConfig("source", source);
     changeSource(source);
+}
+
+function showOnlyLrc() {
+    $("#bg").fadeOut(100, () => {
+        $("#lrconly").fadeIn(100, () => {
+            pointToLrc(true);
+
+        });
+    });
+    updateLrcOnly();
+}
+
+function updateLrcOnly() {
+    var Singer = $("#mshowsinger").text();
+    if (Singer == "" || Singer == null) {
+        Singer = "未知";
+    }
+    flushLrcInLrcOnly();
+    $("#lrconly-name").text(Singer + ' - ' + $("#ssongname").text());
+}
+function flushLrcInLrcOnly() {
+    var res = "";
+    for (var i in oLRC.ms) {
+        var line = oLRC.ms[i];
+        //t Time c Text
+        if (line.c == '') {
+            line.c = "//";
+        }
+        // var code = `<div id='lrc-${i}' class='lrc-line' time='${line.t}'>${HTMLEncode(line.c)}</div>`
+        var code = `<div id='s-lrc-${i}' class='lrc-line' time='${line.t}'><span style="transition: 0ms;" class="lrc-content" onclick='playfromtime(${line.t});'>${HTMLEncode(line.c)}</span></div>`
+        res += code;
+    }
+    if (res == "") res = "<div id='s-lrc-0' class='lrc-line' time='0'>该歌曲暂时无歌词提供</div>";
+    res += "<div id='lrconly-bottom'></div>";
+    document.getElementById("lrccontentonly").innerHTML = res;
+    // windowsResize();
+}
+function closeLrcOnly() {
+    $("#lrconly").fadeOut(100, () => {
+        $("#bg").fadeIn(100, () => {
+            pointToLrc(true);
+
+        });
+    });
 }

@@ -21,19 +21,34 @@ if (is_file("idcache.json")) {
     if ($flength > 0) {
         $content = fread($myfile, $flength);
     } else {
-        $content = '{"idx":0,"cache":{}}';
+        $content = '{"idx":0,"cache":{"##TEMP##":-1}}';
     }
     fclose($myfile);
 } else {
-    $content = '{"idx":0,"cache":{}}';
+    $content = '{"idx":0,"cache":{"##TEMP##":-1}}';
 }
+// echo $content;
+// return;
 $idcaches = json_decode($content);
-if (empty($idcaches->cache))
-    $idcaches = json_decode('{"idx":0,"cache":{},"cacheO":{}}');
-if (empty($idcaches->idx))
-    $idcaches = json_decode('{"idx":0,"cache":{},"cacheO":{}}');
+if (empty($idcaches->cache)){
+    $idcaches = json_decode('{"idx":0,"cache":{}}');
+    // http_response_code(500);
+    // return;
+}
+if (empty($idcaches->idx)){
+    // http_response_code(500);
+    // echo json_encode($idcaches);
+    // echo $idcaches->idx;
+    // $idcaches = json_decode('{"idx":0,"cache":{}}');
+    // return;
+    $idcaches->idx = 0;
+}
+$idcache = json_decode("{}");
+
 $idcache = $idcaches->cache;
-$idcacheO = $idcaches->cacheO;
+if(empty($idcache)){
+    $idcache = json_decode("{}");
+}
 $total = 0;
 
 function getId($file, $type = 0)
@@ -41,6 +56,7 @@ function getId($file, $type = 0)
     if (empty($GLOBALS['idcache']->$file)) {
         $idx = $GLOBALS['idcaches']->idx + 1;
         $GLOBALS['idcaches']->idx = $idx;
+        // if($GLOBALS['idcache']->$file == null)
         $GLOBALS['idcache']->$file = $idx;
         $GLOBALS['idcache']->$idx = $file;
         return $GLOBALS['idcaches']->idx;
@@ -60,6 +76,7 @@ function getSongPath($id)
 }
 function saveId()
 {
+    $GLOBALS['idcaches']->cache = $GLOBALS['idcache'];
     $mywritefile = fopen("idcache.json", "w") or send_error("Unable to write file!");
     fwrite($mywritefile, json_encode($GLOBALS['idcaches']));
     fclose($mywritefile);

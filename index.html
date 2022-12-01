@@ -64,31 +64,36 @@
             <span>根据代码检测，您的浏览器不支持我们所使用的 gQuery</span>
         </div>
     </div>
-    <div id="bg">
-        <div id="musicpane" onclick="$('#autoinfo').hide();" tabindex="0">
-            <div id="minfo">
-                <img id="minfoimg" src="./img/unknown-record.png" onerror='this.src="./img/unknown-record.png"' />
-                <div id="minfotext">
-                    <div id="musictext">
-                        <span id="songname">
-                            歌名：
-                        </span>
-                        <span id="singername">
+    <div id="lrconly"><button id="closeLrcOnlyBtn" onclick="closeLrcOnly();">×</button>
+        <h1 id="lrconly-name"></h1>
+        <div id="lrccontentonly"></div>
+    </div>
+    <div id="musicpane" onclick="$('#autoinfo').hide();" tabindex="0">
+        <div id="minfo">
+            <img id="minfoimg" src="./img/unknown-record.png" onerror='this.src="./img/unknown-record.png"' />
+            <div id="minfotext">
+                <div id="musictext">
+                    <span id="songname">
+                        歌名：
+                    </span>
+                    <span id="singername">
 
-                        </span>
-                        <div onclick="showMusicList();" id="btn_music" class="smusiclist barlist" title="音乐播放列表"
-                            tabindex="0">
-                        </div>
+                    </span>
+                    <div onclick="showMusicList();" id="btn_music" class="smusiclist barlist" title="音乐播放列表"
+                        tabindex="0">
                     </div>
+                </div>
 
-                    <div id="musiccontrol">
-                        <audio controls src="" id="musicurl" tabindex="0"></audio>
-                    </div>
+                <div id="musiccontrol">
+                    <audio controls src="" id="musicurl" tabindex="0"></audio>
+                </div>
 
-                </div><br />
+            </div><br />
 
-            </div>
         </div>
+    </div>
+    <div id="bg">
+
         <div id="leftbar">
             <div id="iconbar">
 
@@ -190,11 +195,12 @@
                                 onclick="openalarmbyid_true(this.getAttribute('alid'),this.innerText);">
                                 暂无
                             </a>
-                            <br/><span>推测歌曲语言为：</span><span id="languagename">未知</span>
+                            <br /><span>推测歌曲语言为：</span><span id="languagename">未知</span>
                         </span><span style="margin-left: 8px;font-size:12px;" id="textmusicmv" tabindex="0">
                             <span class="sinfospan">MV地址：</span><a id="mmvurl" href="">
                                 暂无
                             </a>
+                            <a href="" id="showOnlyLrc" onclick="showOnlyLrc();">【仅显示歌词】</a>
                         </span><br />
                         <span style="font-size:12px;" id="textmusicurl">
                             <span class="sinfospan">歌曲地址：</span><a target="_blank" id="mshowurl" href="" tabindex="0">

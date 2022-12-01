@@ -102,6 +102,16 @@ function searchSong($value)
 }
 // echo $offsets;
 switch ($type) {
+    case 'getid':
+        $html = getSongPath($value);
+        if ($html == false) {
+            $html = json_decode('{"code":404,"msg":"404 - 此歌曲不存在"}');
+            $html->msg = "404 - $value 不存在！";
+            echo json_encode($html);
+            http_response_code(200);
+            return;
+        }
+        break;
     case 'info':
         $result = json_decode('{"data":{"lrclist":[],"songinfo":{}}}');
 
@@ -136,6 +146,7 @@ switch ($type) {
         $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
         if (is_file($mvres)) {
             $line->hasmv = 1;
+            $line->hasMv = 1;
             $line->rid = $value;
         }
         $filebasename = basename($filewithoutext);
