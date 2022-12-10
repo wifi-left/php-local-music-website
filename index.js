@@ -4,6 +4,8 @@
 $("#pre-loading-text").show();
 $("#pre-fail-text").hide();
 var specLrc = 0;
+var debugMode = false;
+debugMode = program.getConfig("debug", false);
 var logFather = document.getElementById("log_display");
 var musicPlayingIndex = -1;
 var musicPlayingList = [];
@@ -137,7 +139,9 @@ function logdata(data) {
     try {
         var BASE = logFather.innerHTML;
         if (BASE == null) BASE = "";
-        logFather.innerHTML = BASE + code;
+        if (debugMode == false) logFather.innerHTML = code;
+        else
+            logFather.innerHTML = BASE + code;
     } catch (e) { console.log(data); }
 
 }
@@ -153,7 +157,9 @@ function logdata_ok(data) {
     try {
         var BASE = logFather.innerHTML;
         if (BASE == null) BASE = "";
-        logFather.innerHTML = BASE + code;
+        if (debugMode == false) logFather.innerHTML = code;
+        else
+            logFather.innerHTML = BASE + code;
     } catch (e) { console.log(data); }
 }
 function logdata_warn(data) {
@@ -168,7 +174,9 @@ function logdata_warn(data) {
     try {
         var BASE = logFather.innerHTML;
         if (BASE == null) BASE = "";
-        logFather.innerHTML = BASE + code;
+        if (debugMode == false) logFather.innerHTML = code;
+        else
+            logFather.innerHTML = BASE + code;
     } catch (e) { console.log(data); }
 }
 function logdata_error(data) {
@@ -183,7 +191,9 @@ function logdata_error(data) {
     try {
         var BASE = logFather.innerHTML;
         if (BASE == null) BASE = "";
-        logFather.innerHTML = BASE + code;
+        if (debugMode == false) logFather.innerHTML = code;
+        else
+            logFather.innerHTML = BASE + code;
     } catch (e) { console.log(data); }
     console.warn(data);
 }

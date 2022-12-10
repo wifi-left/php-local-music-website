@@ -41,7 +41,7 @@ if (substr($value, 0, 6) == 'MUSIC_') {
 function searchSong($value)
 {
     $result = json_decode('{"data":{"total":0,"list":[],"musicList":[]}}');
-    $file = fopen("location.txt", "r");
+    $file = fopen("cache/location.txt.bamboomusic", "r");
     $keyword = $value;
     //检测指正是否到达文件的未端
 
@@ -50,7 +50,7 @@ function searchSong($value)
         // echo "<h1>$path</h1>";
         scanAllFile(trim($path), $keyword);
     }
-    saveId();
+    // saveId();
 
     fclose($file);
     // echo json_encode($files);
@@ -175,7 +175,7 @@ switch ($type) {
                 // echo json_encode($line);
             }
         }
-        saveId();
+        // saveId();
         // $result->data-
         $html = json_encode($result);
         break;
@@ -261,7 +261,7 @@ switch ($type) {
         break;
     case 'suggestKey':
 
-        $file = fopen("location.txt", "r");
+        $file = fopen("cache/location.txt.bamboomusic", "r");
         $line = json_decode('{"code":200,"data":[]}');
         $keyword = $value;
         //检测指正是否到达文件的未端
@@ -293,12 +293,12 @@ switch ($type) {
             if ($count > 10) break;
             $line->data[] = $value;
         }
-        saveId();
+        // saveId();
         echo json_encode($line);
         break;
     case 'alarm':
         $result = json_decode('{"total":0,"musiclist":[]}');
-        $file = fopen("location.txt", "r");
+        $file = fopen("cache/location.txt.bamboomusic", "r");
         $keyword = "";
         //检测指正是否到达文件的未端
         $path = getSongPath($value);
@@ -349,7 +349,7 @@ switch ($type) {
             $result->musiclist[] = $line;
             // echo json_encode($line);
         }
-        saveId();
+        // saveId();
         // $result->data->lrclist = $lrc;
         $result->total = $total;
         $html = json_encode($result);
@@ -357,7 +357,7 @@ switch ($type) {
         break;
     case 'playlist':
         $result = json_decode('{"data":{"total":0,"musicList":[]}}');
-        $file = fopen("location.txt", "r");
+        $file = fopen("cache/location.txt.bamboomusic", "r");
         $keyword = "";
         //检测指正是否到达文件的未端
         $path = getSongPath($value);
@@ -407,7 +407,7 @@ switch ($type) {
             $result->data->musicList[] = $line;
             // echo json_encode($line);
         }
-        saveId();
+        // saveId();
         // $result->data->lrclist = $lrc;
         $result->data->total = $total;
         $html = json_encode($result);
@@ -453,7 +453,7 @@ switch ($type) {
 
         break;
     case 'folder':
-        $file = fopen("location.txt", "r");
+        $file = fopen("cache/location.txt.bamboomusic", "r");
         $result = json_decode('{"data":{"list":[]}}');
         while (!feof($file)) {
             $path = trim(fgets($file));
@@ -472,11 +472,11 @@ switch ($type) {
 
         $html = json_encode($result);
         fclose($file);
-        saveId();
+        // saveId();
         break;
     case 'files':
         $result = json_decode('{"data":{"total":0,"musicList":[]}}');
-        $file = fopen("location.txt", "r");
+        $file = fopen("cache/location.txt.bamboomusic", "r");
         $keyword = "";
         //检测指正是否到达文件的未端
 
@@ -485,7 +485,7 @@ switch ($type) {
             // echo "<h1>$path</h1>";
             scanAllFile(trim($path), $keyword);
         }
-        saveId();
+        // saveId();
 
         fclose($file);
         // echo json_encode($files);
@@ -537,6 +537,6 @@ switch ($type) {
         http_response_code(404);
         return;
 }
-saveId();
+// saveId();
 
 echo $html;
