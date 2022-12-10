@@ -10,11 +10,11 @@ PHP 扩展请开启 CURL，建议使用 PHP 8 版本（已测试）
 
 # 配置
 
-修改本地音乐存储地址：`/apis/location.txt`
+修改本地音乐存储地址：`/apis/cache/location.txt`
 
 一行一个地址，会自动搜索子目录。
 
-ID 缓存地址：`/apis/idcache.json`
+ID 缓存地址：`/apis/cache/idcache.json`
 
 # 支持的音乐
 
