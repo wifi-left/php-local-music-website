@@ -98,6 +98,44 @@ function getId($file, $type = 0)
         return $GLOBALS['idcache']->$file;
     }
 }
+$pathnames = null;
+function loadPathNames()
+{
+    if (is_file("cache/names.json.bamboomusic")) {
+        $myfile = fopen("cache/names.json.bamboomusic", "r") or send_error("无法读取ID缓存列表。");
+        $flength = filesize("cache/names.json.bamboomusic");
+        if ($flength > 0) {
+            $content = fread($myfile, $flength);
+        } else {
+            $content = '[]';
+        }
+        fclose($myfile);
+        $GLOBALS['pathnames'] = json_decode($content);
+    }
+}
+function getDirAlName($dir)
+{
+    if ($GLOBALS['pathnames'] == null)
+        loadPathNames();
+    foreach ($GLOBALS['pathnames'] as $value) {
+        $ele = $value;
+        $pps = $ele->path;
+        if ($dir == $pps) {
+            if ($ele->name == "") $ele->name = dirname($pps);
+            return $ele->name;
+        };
+    }
+    foreach ($GLOBALS['pathnames'] as $value) {
+        $ele = $value;
+        $pps = $ele->path;
+        if (strstr($dir, $pps)) {
+            if ($ele->name == "") $ele->name = dirname($pps);
+            return $ele->name;
+        };
+    }
+    return ($dir);
+}
+
 function getSongPath($id)
 {
 
@@ -180,6 +218,8 @@ function scanAllFile_cache($path)
                 $file->type = 1;
                 $result[] = $file;
             } else {
+                if (!fnmatch("*.mp3", $path . '\\' . $value))
+                    continue;
                 getId($path . '\\' . $value, 2);
                 $file = new localfileinfo();
                 $file->path = $value;

@@ -1,0 +1,369 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Gamom's Website</title>
+    <link rel="stylesheet" type="text/css" href="../lib/st_ga.css">
+    <script src="../lib/gquery.min.js"></script>
+    <style>
+        #loading {
+            background-color: aquamarine;
+            /* color: azure; */
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        * {
+            transition: 0.5s;
+            overflow-y: none;
+            overflow-x: none;
+            user-select: none;
+        }
+
+        .center-title {
+            /* color: white; */
+            font-family: "console";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+
+        #topicon {
+            position: absolute;
+            left: 16px;
+            top: 6px;
+            height: 48px;
+            width: 48px;
+
+            background-size: 100%;
+        }
+
+        #topbar {
+            padding-left: 2em;
+            background-color: rgb(220, 252, 241);
+            width: calc(100% - 2em);
+            height: 60px;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        /* #centerlog {
+            width: 200px;
+            height: 200px;
+            background-image: url("img/icon.png");
+            background-size: 100%;
+            text-align: center;
+        } */
+
+        #index {
+            padding: 2em 2em 2em 2em;
+            background-image: linear-gradient(135deg, rgb(220, 252, 241), aquamarine);
+            width: calc(100% - 4em);
+            height: calc(100% - 4em);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #cltext {
+            color: #333;
+        }
+
+        #cltext:hover {
+            color: rgb(104, 104, 104);
+        }
+
+        #textarea {
+            position: absolute;
+            top: 0px;
+            left: 0;
+            padding: 4em 4em 4em 4em;
+            width: calc(100% - 8em);
+            height: auto;
+        }
+
+        .button-o {
+            color: #333;
+            font-weight: bold;
+            font-family: "console";
+            font-size: 26px;
+            outline: none;
+            border: none;
+            border-bottom: 4px solid #333;
+            width: 180px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            line-height: 60px;
+        }
+
+        .button-o:hover,
+        .button-o:active {
+            color: #b6b6b6;
+            border-bottom: 4px solid #b6b6b6;
+        }
+
+        .windows {
+            background: rgba(10, 10, 10, 0.8);
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+        }
+
+        .pane {
+            display: none;
+            width: 100%;
+        }
+
+        .name-input {
+            width: calc(100%);
+            display: inline-block;
+        }
+
+        .path-list {
+            width: calc(100%);
+            display: inline-block;
+            user-select: text;
+            -moz-user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .path-list b {
+            user-select: text;
+            -moz-user-select: text;
+            -webkit-user-select: text;
+        }
+    </style>
+</head>
+
+<body bgcolor="azure">
+    <div id="textarea">
+        <div>
+            <h1>Local Bamboo Music Manager 管理员设置页</h1>
+            <div id="D_checkPSW" class="pane" style="display:inline-block">
+                <h3>请输入管理密码：</h3>
+                <span>若未设置，默认为 <code>admin</code></span><br />
+                <input class="input" id="psw-enter" type="password" placeholder="请输入密码" />
+                <button class="button-blue" onclick="checkPSW();">提交</button>
+            </div>
+            <div id="Ds_MAIN" class="pane">
+                <h3>主页面</h3>
+                <button class="button-o" onclick="ChangePsw();">修改密码</button>
+                <button class="button-o" onclick="SetNames();">设置别名</button>
+                <button class="button-o" onclick="flushCache_P();">刷新缓存</button>
+            </div>
+            <div id="D_CHANGEPSW" class="pane">
+                <h3>请输入管理密码：</h3>
+                <span>设置新的密码</span><br />
+                <input class="input" id="psw-change-enter" />
+                <button class="button-blue" onclick="changeNPSW();">提交</button>
+                <button class="button" onclick="backMain();">取消</button>
+            </div>
+            <div id="Ds_NAME" class="pane">
+                <h3>修改别名</h3>
+                <ul id="nameF">
+
+                </ul>
+                <br />
+                <button class="button-blue" onclick="subNames();">提交</button>
+                <button class="button" onclick="backMain();">取消</button>
+
+            </div>
+            <div id="Ds_CACHE" class="pane">
+                <h3>刷新缓存</h3>
+                <span>此操作不可逆</span><br />
+                <button class="button-blue" onclick="flushCache();">继续</button>
+                <button class="button" onclick="backMain();">取消</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+
+    var namepaths = [];
+    var paths = [];
+    var pathnamess = {};
+    function subNames() {
+        var eles = document.getElementsByClassName("name-input");
+        namepaths = [];
+        for (var i = 0; i < eles.length; i++) {
+            var path = eles[i].getAttribute("x-content");
+            var name = eles[i].value;
+            if (name != "" && name != undefined) {
+                namepaths[namepaths.length] = { "path": path, "name": name };
+            }
+        }
+        // console.log(namepaths);
+        var namepaths_URI = encodeURIComponent(JSON.stringify(namepaths));
+        fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=2", {
+            method: 'post',
+            body: namepaths_URI,
+            headers: {
+                'Content-Type': 'application/x-www-data-urlencoded'
+            }
+        }).then(res => res.text()).then((data1) => {
+            try {
+                data = JSON.parse(data1);
+            } catch (e) {
+                console.log(e);
+                data = data1
+            };
+            if (data.msg == undefined) data.msg = "未知错误，请重试。";
+            if (data.code != 200) {
+                alert(data.msg);
+                return;
+            }
+            // pswcache = pswcache1;
+            alert(data.msg);
+            backMain();
+
+        });
+    }
+    function js_H(data) {
+        if (data == undefined) return "";
+        var d = data;
+        try {
+            d.replaceAll("\\", "\\\\")
+            d.replaceAll("\"", "\\\"");
+        } catch (e) {
+            return "";
+        }
+        return d;
+
+    }
+    function showNameUI() {
+        var code = ``;
+        pathnamess = {};
+        for (var i in namepaths) {
+            pathnamess[namepaths[i].path] = namepaths[i].name;
+        }
+        for (var i in paths) {
+            if (pathnamess[paths[i]] == undefined) pathnamess[paths[i]] = "";
+            code += `<li><span class="path-list"><b>${paths[i]}</b><span></span></span><input x-content="${js_H(paths[i])}" class="input name-input" value="${js_H(pathnamess[paths[i]])}" placeholder="请输入名称" /></li>`
+        }
+        nameF.innerHTML = code;
+    }
+    function loadNamePaths() {
+        $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=5", "json").then(data => {
+            // console.log(data);
+            if (data.msg == undefined) data.msg = "未知错误，请重试。";
+            if (data.code != 200) {
+                alert(data.msg);
+                return;
+            }
+            paths = data.data;
+            $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=1", "json").then(data => {
+                // console.log(data);
+                if (data.msg == undefined) data.msg = "未知错误，请重试。";
+                if (data.code != 200) {
+                    alert(data.msg);
+                    return;
+                }
+                namepaths = data.data;
+                showNameUI();
+                // D_checkPSW.style.display = "none";
+                // Ds_MAIN.style.display = "inline-block";
+            });
+            // D_checkPSW.style.display = "none";
+            // Ds_MAIN.style.display = "inline-block";
+        });
+
+    }
+    function flushCache_P() {
+        Ds_CACHE.style.display = "inline-block";
+        Ds_MAIN.style.display = "none";
+    }
+    function backMain() {
+        D_CHANGEPSW.style.display = "none";
+        Ds_MAIN.style.display = "inline-block";
+        Ds_NAME.style.display = "none";
+        Ds_CACHE.style.display = "none";
+    }
+    var pswcache = "";
+    function changeNPSW() {
+        var psw = document.getElementById("psw-change-enter").value;
+        if (psw == "" || psw == undefined) {
+            alert("请输入密码");
+            return;
+        }
+        var pswcache1 = btoa(psw);
+        $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=3&value=" + encodeURIComponent(pswcache1), "json").then(data => {
+            // console.log(data);
+
+            if (data.msg == undefined) data.msg = "未知错误，请重试。";
+            if (data.code != 200) {
+                alert(data.msg);
+                return;
+            }
+            pswcache = pswcache1;
+
+            backMain();
+        });
+    }
+    function ChangePsw() {
+        Ds_MAIN.style.display = "none";
+        D_CHANGEPSW.style.display = "inline-block";
+    };
+    function SetNames() {
+        Ds_MAIN.style.display = "none";
+        Ds_NAME.style.display = "inline-block";
+        loadNamePaths();
+    };
+    function flushCache() {
+        $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=4", "json").then(data => {
+            // console.log(data);
+            if (data.msg == undefined) data.msg = "未知错误，请重试。";
+            if (data.code != 200) {
+                alert(data.msg);
+                return;
+            }
+            backMain();
+
+            alert(data.msg);
+            // D_checkPSW.style.display = "none";
+            // Ds_MAIN.style.display = "inline-block";
+        });
+    };
+    function checkPSW() {
+        var psw = document.getElementById("psw-enter").value;
+        if (psw == "") {
+            alert("请输入密码");
+            return;
+        }
+        pswcache = btoa(psw);
+        $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=-1", "json").then(data => {
+            // console.log(data);
+            if (data.msg == undefined) data.msg = "未知错误，请重试。";
+            if (data.code != 200) {
+                alert(data.msg);
+                return;
+            }
+            D_checkPSW.style.display = "none";
+            Ds_MAIN.style.display = "inline-block";
+        });
+    }
+    function changePSW() {
+
+    }
+    /*
+    4 刷新缓存
+    5 所有目录列表
+    1 目录别名
+    2 设置别名
+    3 更改密码
+    */
+</script>
+
+</html>

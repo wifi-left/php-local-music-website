@@ -88,7 +88,7 @@ function searchSong($value)
             $line->artistId = base64_encode($singer);
         }
         if (!empty($pathid)) {
-            $line->album = $filepath;
+            $line->album = getDirAlName($filepath);
             $line->albumid = $pathid;
             $line->albumId = $pathid;
         }
@@ -166,7 +166,7 @@ switch ($type) {
                     $line->artistId = base64_encode($singer);
                 }
                 if (!empty($pathid)) {
-                    $line->album = $filepath;
+                    $line->album = getDirAlName($filepath);
                     $line->albumid = $pathid;
                     $line->albumId = $pathid;
                 }
@@ -250,7 +250,7 @@ switch ($type) {
             $line->artistId = base64_encode($singer);
         }
         if (!empty($pathid)) {
-            $line->album = $filepath;
+            $line->album = getDirAlName($filepath);
             $line->albumid = $pathid;
             $line->albumId = $pathid;
         }
@@ -341,7 +341,7 @@ switch ($type) {
                 $line->artistId = base64_encode($singer);
             }
             if (!empty($pathid)) {
-                $line->album = $filepath;
+                $line->album = getDirAlName($filepath);
                 $line->albumid = $pathid;
                 $line->albumId = $pathid;
             }
@@ -399,7 +399,7 @@ switch ($type) {
                 $line->artistId = base64_encode($singer);
             }
             if (!empty($pathid)) {
-                $line->album = $filepath;
+                $line->album = getDirAlName($filepath);
                 $line->albumid = $pathid;
                 $line->albumId = $pathid;
             }
@@ -430,7 +430,7 @@ switch ($type) {
             http_response_code(404);
             return;
         }
-        $html = "./apis/getlocalmusic.php?id=" . $value;
+        $html = "./apis/getlocalmusic.php?id=" . $value . "&type=music";
         // echo $html;
         break;
     case 'singer':
@@ -462,7 +462,7 @@ switch ($type) {
             $line = json_decode('{"name":"","uname":"","userName":"","id":""}');
             $pathid = getId($path);
             $line->id = $pathid;
-            $line->name = trim($path);
+            $line->name = getDirAlName(trim($path));
             $line->uname = "Local";
             $line->userName = "Local";
             $result->data->list[] = $line;
@@ -518,7 +518,7 @@ switch ($type) {
                 $line->artistId = base64_encode($singer);
             }
             if (!empty($pathid)) {
-                $line->album = $filepath;
+                $line->album = getDirAlName($filepath);
                 $line->albumid = $pathid;
                 $line->albumId = $pathid;
             }
