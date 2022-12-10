@@ -11,6 +11,7 @@ var DisabledAnimationLrc = false;
 var hideMainLrcs = false;
 var errid = 0;
 var sourceID = 0;
+var NowPlayId = undefined;
 var DARK_style = document.createElement("link");
 DARK_style.href = "./lib/theme/light.css";
 DARK_style.rel = "stylesheet";
@@ -230,7 +231,14 @@ mplayer.onplay = () => {
 var parsesss = false;
 var nowpg = 1;
 function getQueryString(url, name) {
-    if (name == null) name = url, url = window.location.search;
+    if (name == null) {
+        name = url;
+        if (window.location.hash != null && window.location.hash != "")
+            url = window.location.hash;
+        else
+            url = window.location.search;
+    }
+
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = url.substring(1).match(reg);
     if (r != null) return decodeURI(r[2]); return null;
@@ -245,6 +253,8 @@ function getalarmidafter(data, text) {
     }
 }
 function searchSongs(val, pg, pgsize) {
+    location.hash = `#search=${encodeURIComponent(val)}`;
+
     if (val.substring(0, "[ALARM]".length) == '[ALARM]') {
         showMsg("获取专辑 ID 中...", "info");
         var text = val.substring("[ALARM]".length);
@@ -1742,7 +1752,6 @@ function parseMv(ele) {
     watchMv(ele.getAttribute("mvid"))
 }
 function flushMv(data) {
-    showPage(document.getElementById("mv"));
     $('#watchvideo').show();
     document.getElementById('watchvideo').src = data;
 
@@ -1752,6 +1761,7 @@ function flushMv(data) {
     } else {
         mplayer.pause();
         // logdata(data);
+
         document.getElementById('watchvideo').play();
     }
 
@@ -1761,6 +1771,10 @@ function watchMv(id) {
 
     var urlpath = MusicApis.mv.replaceAll("${id}", id);
     // logdata(urlpath);
+    location.hash = `#mvid=${encodeURIComponent(id)}`;
+    NowPlayId = id;
+    showPage(document.getElementById("mv"));
+
     fetchinfo(urlpath, {}, flushMv, null, 1);
 }
 function flushPicErr1() {
@@ -1809,6 +1823,8 @@ function listensong1(data, id) {
     mdownloadlrc.setAttribute("download", "歌曲歌词加载中.lrc");
     var urlpath = MusicApis.songinfo.replaceAll("${id}", id);
     errid = id;
+    location.hash = `#musicid=${encodeURIComponent(id)}`;
+    NowPlayId = id;
     // logdata(urlpath)
     fetchinfo(urlpath, {}, flushpic1, 0, 1, flushPicErr1);
     //logdata(data);
@@ -1835,6 +1851,8 @@ function listensong(data, id) {
     var urlpath = MusicApis.songinfo.replaceAll("${id}", id);
     // logdata(urlpath)
     errid = id;
+    location.hash = `#musicid=${encodeURIComponent(id)}`;
+    NowPlayId = id;
     fetchinfo(urlpath, {}, flushpic, 0, 1, flushPicErr2);
     //logdata(data);
     // hideMusicLoading();
@@ -2116,11 +2134,22 @@ function reflushkeyHelp(value) {
     let urlpath = encodeURI_special(MusicApis.searchHelpKey.replaceAll("${value}", value));
     fetchinfo(urlpath, { csrf: TOKEN_CSRF, referer: MusicApis.root, cookie: "kw_token=" + TOKEN_CSRF + "" }, listHelpKeys, null, 3);
 }
+function randomSong() {
+    let url = MusicApis['randomSong'];
+    if (url == undefined) return;
+    fetchinfo(url, {}, randomSong_Play);
+}
+function randomSong_Play() {
+
+}
 function listMainKey(data) {
 
     try {
         var dat = data;
         // logdata(dat)
+        //     <div class="list-song" pid="-1"><div class="musicinfo"></div><div class="list-check">
+        //     ${1}
+        // </div><img class="list-img"src="./img/unknown-record.png"/><div class="list-info"><span class="list-name"onclick="randomSong();">${disname}</span><br/>随机播放</div><div class="list-control"><button class="li-play imgbutton"onclick="randomSong();"></button></div></div></div>
         var ress = dat.data.list;
         var code = ``;
         var number = 0;
@@ -2256,13 +2285,27 @@ function listHelpKeys(data) {
 }
 var lasterr = "";
 function showPage(whom) {
+    if (whom == undefined) {
+        location.hash = "#"; return;
+    }
+    if (whom.id == 'main') {
+        location.hash = "#page=" + encodeURIComponent(whom.id);
+        flushLrcSetting();
+    }
     if (whom.id == 'setting') {
+        location.hash = "#page=" + encodeURIComponent(whom.id);
         flushLrcSetting();
     }
     else if (whom.id == "music") {
         reflushCanvas();
+        location.hash = "#musicid=" + encodeURIComponent(NowPlayId);
+
+    } else if (whom.id == 'mv') {
+        location.hash = "#mvid=" + encodeURIComponent(NowPlayId);
+
     }
     else if (whom.id == 'mylove') {
+        location.hash = "#page=" + encodeURIComponent(whom.id);
         flushLike();
     }
     var eles = document.getElementsByClassName("barlist-hover");
@@ -2877,6 +2920,12 @@ function init() {
     var musiclist = "";
     mvid = getQueryString("mvid");
     musicid = getQueryString("musicid");
+    if (musicid == 'undefined') musicid = null;
+    // console.log(musicid)
+    pgid = getQueryString("page");
+    console.log(pgid);
+    if (pgid != null && pgid != "")
+        showPage(document.getElementById(pgid));
     Ksearch = (getQueryString("search"));
     Ksource = (getQueryString("source"));
     if (Ksource != null) {

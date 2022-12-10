@@ -19,13 +19,14 @@ const localApis = {
     kwpicPrefix: "",
     mvplayUrl: location.origin + location.pathname + "/apis/void.json",
     kwplaylist: location.origin + location.pathname + "/apis/local.php?type=folder",
-    hottopsong: location.origin + location.pathname + "/apis/local.php?type=files",
+    hottopsong: location.origin + location.pathname + "/apis/local.php?type=random",
     searchHelpKey: location.origin + location.pathname + "/apis/local.php?type=suggestKey&value=${value}",
     singersongs: location.origin + location.pathname + "/apis/local.php?type=singer&value=${id}&offset=${pn}&limit=${norpgsize}",
     alarmsongs: location.origin + location.pathname + "/apis/local.php?type=alarm&value=${id}&offset=${pn}&limit=${norpgsize}",
-    topsong: location.origin + location.pathname + "/apis/local.php?type=files&limit=30&offset=${pn}",
+    topsong: location.origin + location.pathname + "/apis/local.php?type=random&value=${norpgsize}&seed=${pn}",
     mv: location.origin + location.pathname + "/apis/local.php?type=mv&value=${id}",
-    playlist: location.origin + location.pathname + "/apis/local.php?type=playlist&value=${id}&offset=${pn}&limit=${norpgsize}"
+    playlist: location.origin + location.pathname + "/apis/local.php?type=playlist&value=${id}&offset=${pn}&limit=${norpgsize}",
+    randomSong: location.origin + location.pathname + "/apis/local.php?type=random"
 }
 var MusicApis = localApis;
 

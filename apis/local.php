@@ -50,6 +50,8 @@ function searchSong($value)
         // echo "<h1>$path</h1>";
         scanAllFile(trim($path), $keyword);
     }
+    saveId();
+
     fclose($file);
     // echo json_encode($files);
     foreach ($GLOBALS['files'] as $valued) {
@@ -62,8 +64,6 @@ function searchSong($value)
             $line->rid = $value;
             $line->hasmv = 1;
         }
-
-        $filewithoutext = $valued->filename;
         $filebasename = basename($filewithoutext);
         $filepath = dirname($res);
         $musicid = $valued->id;
@@ -100,8 +100,85 @@ function searchSong($value)
     $result->data->total = $GLOBALS['total'];
     $GLOBALS['result'] = $result;
 }
+$seed = 1;
+if (!empty($_GET['seed'])) $seed = $_GET['seed'];
+$seed = strtotime(date('Y-d-m')) . '' . $seed;
 // echo $offsets;
 switch ($type) {
+    case 'random':
+
+
+        // echo $seed;
+        // return;
+
+        $result = json_decode('{"seed":"","total":30,"data":{"total":30,"list":[],"musicList":[],"num":3000},"num":3000}');
+        $result->seed = $seed;
+        $count = $value;
+        // echo $value == null;
+        $tmp = $idcaches->all_ids;
+        if (count($tmp) <= 0) {
+            $result->total = count($tmp);
+            echo (json_encode($result));
+            return;
+        }
+        if ($count == null || $count == "" || $count == 0) $count = 10;
+        for ($iii = 0; $iii < $count; $iii++) {
+            if ($GLOBALS['seed'] != 0) mt_srand($seed + $iii * $iii * 11);
+
+            $rdnum = mt_rand(0, count($tmp) - 1);
+            $resid = $tmp[$rdnum];
+            // echo $idcaches_OBJ['1'];
+            // return;
+            // echo json_encode($idcaches_OBJ);
+            // return;
+            if (!is_numeric($resid)) echo $resid;
+            $res = getSongPath($resid);
+            // $res = getSongPath($value);
+            if ($res != false && $res != "") {
+                $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+                $filewithoutext = substr($res, 0, strrpos($res, "."));
+                $mvres = $filewithoutext . '.mp4';
+                if (is_file($mvres)) {
+                    $line->rid = $resid;
+                    $line->hasmv = 1;
+                }
+                $filebasename = basename($filewithoutext);
+                $filepath = dirname($res);
+                $musicid = $resid;
+                $pathid = getId($filepath);
+                $singer = substr($filebasename, 0, strpos($filebasename, " - "));
+                if (strpos($filebasename, " - ") != false)
+                    $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
+                else $songname = $filebasename;
+                // echo strpos($res, " - ");
+                if (!empty($songname)) {
+                    $line->name = $songname;
+                    $line->songName = $songname;
+                }
+                if (!empty($musicid)) {
+                    $line->rid = $musicid;
+                    $line->id = $musicid;
+                    $line->musicrid = "MUSIC_" . $musicid;
+                }
+                if (!empty($singer)) {
+                    $line->artist = $singer;
+                    $line->artistid = base64_encode($singer);
+                    $line->artistId = base64_encode($singer);
+                }
+                if (!empty($pathid)) {
+                    $line->album = $filepath;
+                    $line->albumid = $pathid;
+                    $line->albumId = $pathid;
+                }
+                // $result->data->songinfo = $line;
+                $result->data->musicList[] = $line;
+                // echo json_encode($line);
+            }
+        }
+        saveId();
+        // $result->data-
+        $html = json_encode($result);
+        break;
     case 'getid':
         $html = getSongPath($value);
         if ($html == false) {
@@ -226,7 +303,7 @@ switch ($type) {
         //检测指正是否到达文件的未端
         $path = getSongPath($value);
         if ($path == false) {
-            echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+            echo '{"code":404,"msg":"404 - 此专辑不存在"}';
             http_response_code(404);
             return;
         }
@@ -285,7 +362,7 @@ switch ($type) {
         //检测指正是否到达文件的未端
         $path = getSongPath($value);
         if ($path == false) {
-            echo '{"code":404,"msg":"404 - 此歌曲不存在"}';
+            echo '{"code":404,"msg":"404 - 此列表不存在"}';
             http_response_code(404);
             return;
         }
@@ -366,10 +443,14 @@ switch ($type) {
         $resu->musiclist = $result->data->list;
         $resu->total = $result->data->total;
         $html = json_encode($resu);
+        // saveId();
+
         break;
     case 'search':
         searchSong($value);
         $html = json_encode($result);
+        // saveId();
+
         break;
     case 'folder':
         $file = fopen("location.txt", "r");
@@ -387,6 +468,8 @@ switch ($type) {
             $result->data->list[] = $line;
             // scanAllFile(trim($path), $keyword);
         }
+        // saveId();
+
         $html = json_encode($result);
         fclose($file);
         saveId();
@@ -402,6 +485,8 @@ switch ($type) {
             // echo "<h1>$path</h1>";
             scanAllFile(trim($path), $keyword);
         }
+        saveId();
+
         fclose($file);
         // echo json_encode($files);
         foreach ($files as $valued) {
@@ -441,7 +526,7 @@ switch ($type) {
             $result->data->musicList[] = $line;
             // echo json_encode($line);
         }
-        saveId();
+        // saveId();
         // $result->data->lrclist = $lrc;
         $result->data->total = $total;
         $result->data->num = $total;
