@@ -248,10 +248,14 @@ function getQueryString(url, name) {
         else
             url = window.location.search;
     }
-
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-    var r = url.substring(1).match(reg);
-    if (r != null) return decodeURI(r[2]); return null;
+    try {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = url.substring(1).match(reg);
+        if (r != null) return decodeURI(r[2]); return null;
+    } catch (e) {
+        logdata_error(e);
+        return url;
+    }
 }
 function getalarmidafter(data, text) {
     if (data['code'] == 404) {
@@ -266,33 +270,30 @@ function searchSongs(val, pg, pgsize) {
     location.hash = `#search=${encodeURIComponent(val)}`;
 
     if (val.substring(0, "[ALARM]".length) == '[ALARM]') {
-        showMsg("获取专辑 ID 中...", "info");
         var text = val.substring("[ALARM]".length);
         if (parseInt(text) + "" == text) {
             openalarmbyid_true(text, "专辑ID：" + text);
-        } else {
-            let urlpath = `http://127.0.0.1/localmusicmanager/apis/local.php?type=getid&value=${encodeURI(text)}`;
-            fetchinfo(urlpath, { csrf: TOKEN_CSRF, referer: MusicApis.root, cookie: "kw_token=" + TOKEN_CSRF + "" }, getalarmidafter, text);
         }
-        // http://127.0.0.1/localmusicmanager/apis/local.php?type=getid&value=E:\NEWDOWNLOAD
         return;
     }
-    if (val.substring(0, "http://".length) == 'http://') {
+    if (val.substring(0, "http://".length) == 'http://' || val.substr(0, "https://".length) == 'https://') {
         var text = val.substring(val.lastIndexOf('/') + 1);
         var id = getQueryString(text, "musicid");
+        try {
+            text = text.substring(text.lastIndexOf('?'));
+        } catch (e) {
+
+        }
+        var id2 = getQueryString(text, "id");
+        console.log(text, id2);
         // console.log(id);
         if (id == null)
-            id = text;
+            if (id2 == null)
+                id = text;
+            else id = id2;
         playmusicbyid(id);
         // logdata(id);
         return;
-    }
-    else if (val.substr(0, "https://".length) == 'https://') {
-        var id = val.substr(val.lastIndexOf('/') + 1);
-        // logdata(id);
-        playmusicbyid(id);
-        return;
-
     } else if (val.substr(0, '#*'.length) == '#*') {
         // var id;
         var id = val.substr('#*'.length);

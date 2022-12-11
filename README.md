@@ -22,6 +22,14 @@ ID 缓存地址：`/apis/cache/idcache.json`
 
 歌词仅支持和歌曲同名的 `.lrc` 文件。（会自动读取）
 
+# 服务器设置
+
+GUI 界面在 `/manager/index.html`。
+
+您也可以使用 API 进行管理：`/apis/localmanager.php`（请参考 GUI 界面代码）。
+
+如果没设置，默认密码为 `admin`。您可以在管理页面修改密码。
+
 # 客户端配置
 
 存储在 LocalStorage 中。网页大部分设置可以在网页上的设置页面中修改。
