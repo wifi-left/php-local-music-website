@@ -1244,14 +1244,23 @@ h1 {
 #xfc_list {
     /* position: absolute; */
     width: 100%;
-    height: calc(100% - 108px);
+    height: calc(100% - 128px);
     overflow: none;
     overflow-y: auto;
 }
-
+#alarmlist_page{
+    position: absolute;
+    bottom: 8px;
+    line-height: 20px;
+    font-size: 16px;
+    height: 20px;
+}
+.xfc_content_s{
+    background-color: rgba(24, 24, 24, 1);
+}
 .xfc_content {
     padding: 16px 16px 16px 16px;
-    background-color: rgba(24, 24, 24, 1);
+    /* background-color: rgba(24, 24, 24, 0); */
     max-width: 1000px;
     min-width: 300px;
     width: calc(60%);
@@ -1270,7 +1279,7 @@ h1 {
     position: fixed;
     top: 0;
     right: 0;
-    width: calc(100% - 0px);
+    width: calc(100%);
     height: calc(100% - 72px);
     transition: 200ms;
 }

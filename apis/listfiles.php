@@ -288,27 +288,46 @@ function scanAllFile($spath, $filter = "*.*", $needtotal = true, $suggestMode = 
                 // getId($path . '\\' . $value, 0);
                 scanAllFile($path . '\\' . $value, $filter, $needtotal, $suggestMode); //继续遍历
             } else {
-                if (fnmatch("*.mp3", $value)) if (stristr($value, $filter) != false) if (is_file($path . '\\' . $value)) {
-                    $GLOBALS['total'] += 1;
-                    $GLOBALS['count'] += 1;
-                    if ($GLOBALS['count'] > ($GLOBALS['page'] + 1) * ($GLOBALS['limit'])) {
-                        return;
-                    } else if ($GLOBALS['count'] <= ($GLOBALS['page']) * ($GLOBALS['limit'])) {
-                        // echo $GLOBALS['count'] . '|' . ($GLOBALS['page'] + 1) * ($GLOBALS['limit']) . '<br/>';
-                        // getId($path . '\\' . $value, 2);
-                        continue;
+                // getDirAlName
+                if (fnmatch("*.mp3", $value))
+                    if (stristr($value, $filter) != false) {
+                        if (searchSuba($path, $value)) {
+                            return;
+                        };
+                    } else if (stristr(basename($path), $filter) != false) {
+                        if (searchSuba($path, $value)) {
+                            return;
+                        };
+                    } else if (stristr(getDirAlName(dirname($path . '\\' . $value)), $filter) != false) {
+                        if (searchSuba($path, $value)) {
+                            return;
+                        };
                     }
-                    // echo $value . '<br/>';
-                    $file = new fileinfo();
-                    $filename = str_replace(strrchr($value, "."), "", $value);
-                    $file->filename = $filename;
-                    $file->path = $path . '\\' . $value;
-
-                    $file->id = getId($path . '\\' . $value, 2);
-                    $GLOBALS['files'][] = $file;
-                    // $GLOBALS['count'] = $GLOBALS['count'] + 1;
-                }
             }
         }
     }
+}
+function searchSuba($path, $value)
+{
+    if (is_file($path . '\\' . $value)) {
+        $GLOBALS['total'] += 1;
+        $GLOBALS['count'] += 1;
+        if ($GLOBALS['count'] > ($GLOBALS['page'] + 1) * ($GLOBALS['limit'])) {
+            return true;
+        } else if ($GLOBALS['count'] <= ($GLOBALS['page']) * ($GLOBALS['limit'])) {
+            // echo $GLOBALS['count'] . '|' . ($GLOBALS['page'] + 1) * ($GLOBALS['limit']) . '<br/>';
+            // getId($path . '\\' . $value, 2);
+            return false;
+        }
+        // echo $value . '<br/>';
+        $file = new fileinfo();
+        $filename = str_replace(strrchr($value, "."), "", $value);
+        $file->filename = $filename;
+        $file->path = $path . '\\' . $value;
+
+        $file->id = getId($path . '\\' . $value, 2);
+        $GLOBALS['files'][] = $file;
+        // $GLOBALS['count'] = $GLOBALS['count'] + 1;
+    }
+    return false;
 }

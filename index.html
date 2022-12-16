@@ -123,8 +123,7 @@
                 <!-- <div onclick="showPage(this);" id="download" class="barlist"> -->
                 <!-- </div> -->
 
-                <div onclick="displaySth(document.getElementById('id_114514'));" id="manage" class="barlist"
-                    tabindex="0">
+                <div onclick="showPage(this);" id="manage" class="barlist" tabindex="0">
 
                 </div>
                 <div onclick="showPage(this);" id="setting" class="barlist" tabindex="0">
@@ -324,6 +323,25 @@
                 <div id="tasklist">
                 </div>
             </div>
+            <div id="pmanage" class="page" style="display:none;">
+                <h2 id="xfc_title">暂无内容</h2>
+                <div id="pagesel1" onclick="$('#autoinfo').hide();">
+                    <div class="pgid" onclick="search_turnto1(1);">
+                        1
+                    </div>
+                    <div class="pgid" onclick="search_turnto1(document.getElementById('pginput').value);">
+                        To
+                    </div>
+                    <input id='pginput1' />
+                    <div class="pgid" onclick="search_turnto1(1);">
+                        1
+                    </div>
+                </div>
+                <div id="xfc_list">
+
+                </div>
+                <div id="alarmlist_page"></div>
+            </div>
             <div id="pmv" class="page" style="display:inline-block;">
                 <video style="display: none;" id="watchvideo" loop controls tabindex="0">
 
@@ -331,7 +349,7 @@
             </div>
             <!-- 特殊悬浮窗：进度 -->
             <div id="id_progress" class="xfc_out">
-                <div class="xfc_content" id="xfc_content_progress">
+                <div class="xfc_content xfc_content_s" id="xfc_content_progress">
                     <h2 id="xfc_title_progress">正在 “干嘛”</h2>
                     <div class="progress">
                         <div class="done" id="id_progress_progress"></div>
@@ -342,28 +360,9 @@
                 </div>
             </div>
             <!-- 特殊的悬浮窗：歌手 / 专辑 -->
-            <div id="id_114514" class="xfc_out" onclick="hideme(this)">
-                <div class="xfc_content" onclick="stopPropagation(event);">
-                    <h2 id="xfc_title">暂无内容</h2>
-                    <div id="pagesel1" onclick="$('#autoinfo').hide();">
-                        <div class="pgid" onclick="search_turnto1(1);">
-                            1
-                        </div>
-                        <div class="pgid" onclick="search_turnto1(document.getElementById('pginput').value);">
-                            To
-                        </div>
-                        <input id='pginput1' />
-                        <div class="pgid" onclick="search_turnto1(1);">
-                            1
-                        </div>
-                    </div>
-                    <div id="xfc_list">
 
-                    </div>
-                </div>
-            </div>
-            <div id="id_musiclist" class="xfc_out" onclick="hideme(this)" style="display: none;">
-                <div class="xfc_content" onclick="stopPropagation(event);">
+            <div id="id_musiclist" class="xfc_out" onclick="hideme(this);" style="display: none;">
+                <div class="xfc_content xfc_content_s" onclick="stopPropagation(event);">
                     <h2>播放列表</h2><button class="li-download imgbutton" id="btn-sharemusiclist"
                         onclick="sharemusiclist();">分享此列表</button>
                     <div id="music_list">

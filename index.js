@@ -203,6 +203,12 @@ const ctx = canvas.getContext('2d')
 var mplayer = document.getElementById("musicurl");
 var fromUrl = false;
 
+mplayer.onvolumechange = () => {
+    // console.log(mplayer.volume)
+    let volumes = mplayer.volume;
+    localStorage.setItem("volume", volumes);
+}
+
 // 有可能会变
 var picSnow = new Image();
 picSnow.src = "./img/practice/snow.png";
@@ -218,7 +224,7 @@ for (var i = 1; i <= 7; i++) {
 var picAi = new Image();
 picAi.src = "./img/practice/love.png";
 // const valueslist = document.getElementsByClassName('editable');
-var norpgsize = 30;
+var norpgsize = program.getConfig("norpgsize", 30);
 // // textarea 菜单键点击
 // for (var i = 0; i < valueslist.length; i++)
 //     valueslist[i].addEventListener('contextmenu', ev => {
@@ -774,7 +780,7 @@ function playmusicbyid_notlist(id, index) {
     showPage(document.getElementById("music"));
     var urlpath = MusicApis.songurl.replaceAll("${id}", id);
     fetchinfo(urlpath, {}, listensong1, id, 1, retryGetMusicURL1);
-    hideme(document.getElementById("id_114514"));
+    // hideme(document.getElementById("id_114514"));
     hideme(document.getElementById("id_musiclist"));
     musicPlayingIndex = index;
 }
@@ -786,7 +792,7 @@ function playmusicbyid(id) {
     showPage(document.getElementById("music"));
     var urlpath = MusicApis.songurl.replaceAll("${id}", id);
     fetchinfo(urlpath, {}, listensong, id, 1, retryGetMusicURL2);
-    hideme(document.getElementById("id_114514"));
+    // hideme(document.getElementById("id_114514"));
     hideme(document.getElementById("id_musiclist"));
 }
 function playmusic(ele) {
@@ -1151,7 +1157,8 @@ function turnPage_xfc2(page) {
 }
 function opensingerbyid(id, name) {
     if (id == null || id == 0 || id == "") return;
-    displaySth(document.getElementById("id_114514"));
+    displaySth_xfc(null, document.getElementById("manage"));
+
     document.getElementById("xfc_title").innerText = "歌手：" + name;
     pageUrl = MusicApis.singersongs.replaceAll("${norpgsize}", norpgsize).replaceAll("${id}", encodeURIComponent(id));
     urlpath = encodeURI_special(pageUrl.replaceAll("${pn}", 0));
@@ -1162,7 +1169,8 @@ function opensingerbyid(id, name) {
 }
 function openalarmbyid_true(id, name) {
     if (id == null || id == 0 || id == "") return;
-    displaySth(document.getElementById("id_114514"));
+    displaySth_xfc(null, document.getElementById("manage"));
+
     document.getElementById("xfc_title").innerText = "专辑：" + name;
     pageUrl = MusicApis.alarmsongs.replaceAll("${norpgsize}", norpgsize).replaceAll("${id}", id);
     urlpath = encodeURI_special(pageUrl.replaceAll("${pn}", 0));
@@ -1172,7 +1180,8 @@ function openalarmbyid_true(id, name) {
 }
 function openpaihang(id, name) {
 
-    displaySth(document.getElementById("id_114514"));
+    displaySth_xfc(null, document.getElementById("manage"));
+
     document.getElementById("xfc_title").innerText = "" + name;
     pageUrl = MusicApis.topsong.replaceAll("${norpgsize}", norpgsize).replaceAll("${id}", id);
     urlpath = encodeURI_special(pageUrl.replaceAll("${pn}", 1));
@@ -1182,7 +1191,8 @@ function openpaihang(id, name) {
 }
 function openalarmbyid(id, name, page = 0) {
     if (id == null || id == 0 || id == "") return;
-    displaySth(document.getElementById("id_114514"));
+    displaySth_xfc(null, document.getElementById("manage"));
+
     document.getElementById("xfc_title").innerText = "播放列表 【" + name + "】";
     pageUrl = MusicApis.playlist.replaceAll("${norpgsize}", norpgsize).replaceAll("${id}", id);
     var url = encodeURI_special(encodeURI_special(pageUrl.replaceAll("${pn}", page + 1)));
@@ -1313,8 +1323,9 @@ function listAlarmKey(data, d2) {
     if (finallyCode == "") {
         finallyCode = "<p>无搜索结果</p>";
     } else {
+        document.getElementById("alarmlist_page").innerHTML = `<a onclick="search_turnto2(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="search_turnto2(${nextpg});"> 下一页 &gt;</a>`;
 
-        finallyCode += `<a onclick="search_turnto2(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="search_turnto2(${nextpg});"> 下一页 &gt;</a>`;
+        // document.getElementById("alarmlist_page").innerHTML = `<a onclick="search_turnto2(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="search_turnto2(${nextpg});"> 下一页 &gt;</a>`;
     }
 
     // document.getElementById("pagesel1").innerHTML = pageselcode;
@@ -1440,7 +1451,9 @@ function listAlarmKey2(data, d2) {
     if (finallyCode == "") {
         finallyCode = "<p>无搜索结果</p>";
     } else
-        finallyCode += `<a onclick="search_turnto1(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="search_turnto1(${nextpg});"> 下一页 &gt;</a>`;
+        // finallyCode += `<a onclick="search_turnto1(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="search_turnto1(${nextpg});"> 下一页 &gt;</a>`;
+        document.getElementById("alarmlist_page").innerHTML = `<a onclick="search_turnto1(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="search_turnto1(${nextpg});"> 下一页 &gt;</a>`;
+
     // logdata(kwlist);
     // kwlist.data.list
     /*
@@ -1546,7 +1559,9 @@ function listAlarmKey3(data, d2) {
         finallyCode = ("出现错误：" + e);
         // return;
     }
-    finallyCode += `<a onclick="turnPage_xfc2(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="turnPage_xfc2(${nextpg});"> 下一页 &gt;</a>`;
+    // finallyCode += `<a onclick="turnPage_xfc2(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="turnPage_xfc2(${nextpg});"> 下一页 &gt;</a>`;
+    document.getElementById("alarmlist_page").innerHTML = `<a onclick="turnPage_xfc2(${lastpg});">&lt; 上一页</a> &nbsp; &nbsp; &nbsp;<a class="pgid" onclick="turnPage_xfc2(${nextpg});"> 下一页 &gt;</a>`;
+
     if (finallyCode == "") {
         finallyCode = "<p>无搜索结果</p>";
     }
@@ -1778,7 +1793,7 @@ function flushMv(data) {
 
 }
 function watchMv(id) {
-    hideme(document.getElementById("id_114514"))
+    hideme(document.getElementById("id_musiclist"))
 
     var urlpath = MusicApis.mv.replaceAll("${id}", id);
     // logdata(urlpath);
@@ -2296,6 +2311,8 @@ function listHelpKeys(data) {
 }
 var lasterr = "";
 function showPage(whom) {
+    // hideme(document.getElementById("id_114514"));
+    hideme(document.getElementById("id_musiclist"));
     if (whom == undefined) {
         location.hash = "#"; return;
     }
@@ -2747,17 +2764,20 @@ var specialEffect = setInterval(() => {
     }
 }, 10);
 function displaySth(ele) {
-    ele.style.left = "100%";
+    ele.style.right = "-100%";
     ele.style.display = "inline-block";
-    setTimeout(`document.getElementById("${ele.id}").style.left = "0";`, 1);
+    setTimeout(`document.getElementById("${ele.id}").style.right = "0";`, 1);
 
+}
+function displaySth_xfc(ele = null, whom) {
+    showPage(whom);
 }
 function indisplayme(ele) {
     ele.style.display = "none";
 }
 function hideme(ele) {
     setTimeout(`indisplayme(document.getElementById("${ele.id}"))`, 200);
-    ele.style.left = "100%";
+    ele.style.right = "-100%";
 }
 function delEff() {
     var l = 0;
@@ -2787,6 +2807,12 @@ window.onresize = function () {
     windowsResize();
 }
 function windowsonload() {
+    let volumes = localStorage.getItem("volume");
+    if (volumes == null) {
+        mplayer.volume = 1;
+    } else {
+        mplayer.volume = volumes;
+    }
     windowsResize();
     reloadUserCSS();
 
