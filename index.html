@@ -63,7 +63,7 @@
                     <button id="pause-song" class="player-control" onclick="pauseMusic()">播放/暂停</button>
                     <button id="last-song" class="player-control" onclick="lastMusic()">上一曲</button>
                     <button id="next-song" class="player-control" onclick="nextMusic()">下一曲</button>
-                    <input type="range" class="player-range" id="play-progress" max="1000" min="0" step="1" value="0" onmousedown="cancelTrack()" onmouseup="startTrack()" />
+                    <input type="range" class="player-range" id="play-progress" max="1000" min="0" step="1" value="0" onmousedown="cancelTrack()" onmouseup="startTrack()" ontouchstart="cancelTrack()" ontouchend="startTrack()" />
                     <button id="mute-volume" class="player-control" onclick="muteVolume()">静音</button>
                     <input type="range" class="player-range" id="volume-set" step="1" max="100" value="0" min="0" />
                     <audio style="display:none;" src="" id="musicurl" tabindex="0"></audio>
@@ -101,9 +101,6 @@
                 <button onclick="showPage(this);" id="mv" class="barlist" tabindex="0">
 
                 </button>
-                <!-- <div onclick="showPage(this);" id="download" class="barlist"> -->
-                <!-- </div> -->
-
                 <button onclick="showPage(this);" id="manage" class="barlist" tabindex="0">
 
                 </button>
@@ -141,8 +138,6 @@
                 <div class="Mcenter">
                     <h1>Ooops! 程序出错了！</h1>
                     <p>请等待修复。</p>
-                    <!-- <a class="buttona" onclick="showError(this);" id="showerror" style="display: none;">显示更多 ></a>
-                    <div class="canCopy" id="errormsg" style="display: none;"></div> -->
                 </div>
 
             </div>
@@ -215,15 +210,6 @@
                         <div class="lrc-line">
                             此处暂时无歌词。
                         </div>
-                        <!-- <div class="lrc-line">
-                        c d e
-                    </div>
-                    <div class="lrc-line-sel">
-                        f g h
-                    </div>
-                    <div class="lrc-line">
-                        i j k
-                    </div> -->
                     </div>
 
                 </div>
@@ -234,30 +220,7 @@
                     <div class="hr"></div>
                 </h1>
                 <div id="mlistbar" onblur="$('#autoinfo').hide();" onclick="$('#autoinfo').hide();">
-                    <!-- <div class="list-song">
-                        <div class="list-check">
-                            <input onclick="setItemColorFromCheckbox(this);" class="list-checkbox" type="checkbox" />
-                        </div>
-                        <img class="list-img" src="./img/unknown-record.png" />
-                        <div class="list-info">
-                            <span class="list-name">
-                                名字：这是唱片名字
-                            </span><br />
-                            <span class='list-singer'>
-                                歌手：这是歌手
-                            </span><br />
-                            <span class="list-V">MNF</span>
-                            <span class="list-D">已下载</span><br />
-                            <span class='list-otherinfo'>
-                            </span>
-                        </div>
-                        <div class="list-control">
-                            <button class="li-download imgbutton">
-                            </button>
-                            <button class="li-play imgbutton">
-                            </button>
-                        </div>
-                    </div> -->
+                    
                 </div>
             </div>
             <div id="psearch" class="page">
@@ -372,13 +335,6 @@
                         <button tabindex="0" class="button" onclick="openpaihang('','随机歌曲');">查看更多</button>
                     </details>
                 </div>
-                <!-- <div style="text-align: center; width:80%" class="Mcenter">
-                    <div style="width:128px;height:128px;" class="icon">
-
-                    </div>
-                    <h1>Bamboo Gamom's Music Player</h1>
-                    <span>点击左侧快捷导航栏开始使用</span>
-                </div> -->
             </div>
             <div id="psetting" class="page">
                 <h1>
@@ -416,12 +372,6 @@
                 <button class="button" onclick="LRCmuliti(1);">默认开启</button>
                 <button class="button" onclick="LRCmuliti(2);">默认关闭（手机用户建议）</button>
                 <br />
-                <!-- // --norlrccolor: rgb(209, 209, 209);
-                // --sellrccolor: rgb(23, 236, 148);
-                // --norlineheight: 28px;
-                // --sellineheight: 40px;
-                // --norfontsize: 16px;
-                // --selfontsize: 24px; -->
                 <span>普通歌词颜色：</span><input class="inputs" id='norlrccolor' type='text' /><input type="color"
                     class="button" onchange="document.getElementById('norlrccolor').value = this.value;" /><br />
                 <span>普通歌词行高（间距）：</span><input class="inputs" id='norlineheight' type='text' /><br />
