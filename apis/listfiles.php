@@ -218,7 +218,10 @@ function scanAllFile_cache($path)
                 $file->type = 1;
                 $result[] = $file;
             } else {
-                if (!fnmatch("*.mp3", $path . '\\' . $value))
+                $flag = false;
+                if (fnmatch("*.mp3", $path . '\\' . $value)) $flag = true;
+                // if (!$flag) if (fnmatch("*.mp4", $path . '\\' . $value)) $flag = true;
+                if (!$flag)
                     continue;
                 getId($path . '\\' . $value, 2);
                 $file = new localfileinfo();
@@ -289,7 +292,9 @@ function scanAllFile($spath, $filter = "*.*", $needtotal = true, $suggestMode = 
                 scanAllFile($path . '\\' . $value, $filter, $needtotal, $suggestMode); //继续遍历
             } else {
                 // getDirAlName
-                if (fnmatch("*.mp3", $value))
+                $flag = false;
+                if (fnmatch("*.mp3", $value)) $flag = true;
+                if ($flag) {
                     if (stristr($value, $filter) != false) {
                         if (searchSuba($path, $value)) {
                             return;
@@ -303,6 +308,7 @@ function scanAllFile($spath, $filter = "*.*", $needtotal = true, $suggestMode = 
                             return;
                         };
                     }
+                }
             }
         }
     }

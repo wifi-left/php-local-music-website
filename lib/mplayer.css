@@ -1,0 +1,89 @@
+input[type=range] {
+    margin-top: 8px;
+    /*上部分的填充值*/
+    outline: none;
+    -webkit-appearance: none;
+    /*清除系统默认样式*/
+    appearance: none;
+    width: 100%;
+    background: linear-gradient(#ffc107, #ffc107) no-repeat, #ddd;
+    /*背景颜色，俩个颜色分别对应上下*/
+    background-size: 0% 100%;
+    /*设置左右宽度比例*/
+    height: 4px;
+    border-radius: 8px;
+}
+.player-range{
+    display: inline-block;
+}
+/*拖动块的样式*/
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /*清除系统默认样式*/
+    height: 16px;
+    /*拖动块高度*/
+    width: 16px;
+    /*拖动块宽度*/
+    background: #f8f9fa;
+    /*拖动块背景*/
+    border-radius: 50%;
+    /*外观设置为圆形*/
+    border: solid 1px #ccc;
+    /*设置边框*/
+}
+input[type=range]::-webkit-slider-thumb:hover {
+    background: #cfcfcf;
+    border: solid 1px #b4b4b4;
+    /*设置边框*/
+}
+input[type=range]::-webkit-slider-thumb:active {
+    background: #a3a3a3;
+    border: solid 1px #aaaaaa;
+    /*设置边框*/
+}
+.player-control{
+    text-indent:-9999px;
+    overflow:hidden;
+    width:24px;
+    height:24px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: 80%;
+    background-position: 50% 50%;
+    background-color: rgba(0,0,0,0);
+    border: 2px solid #333;
+    transition: 100ms;
+    /* border-radius: 8px; */
+    /* padding: 2px 2px 2px 2px; */
+}
+.player-control:hover{
+    background-color: rgba(131, 131, 131, 0.397);
+}
+.player-control:active{
+    background-color: rgba(99, 99, 99, 0.555);
+}
+#pause-song{
+    background-image: url("../img/player/play.svg");
+}
+.player-paused{
+    background-image: url("../img/player/pause.svg") !important;
+}
+#next-song{
+    background-image: url("../img/player/skip-forward.svg");
+}
+#last-song{
+    background-image: url("../img/player/skip-back.svg");
+}
+#mute-volume{
+    background-image: url("../img/player/volume-1.svg");
+}
+.volume-muted{
+    background-image: url("../img/player/volume-x.svg") !important;
+
+}
+#volume-set{
+    width: calc(80px);
+}
+#play-progress{
+    width:calc(100% - 220px);
+}

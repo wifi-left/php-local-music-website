@@ -8,6 +8,9 @@
     <link rel="stylesheet" type="text/css" href="../lib/st_ga.css">
     <script src="../lib/gquery.min.js"></script>
     <style>
+        ul{
+            padding: 0 0 0 0;
+        }
         #loading {
             background-color: aquamarine;
             /* color: azure; */
@@ -144,6 +147,12 @@
             -moz-user-select: text;
             -webkit-user-select: text;
         }
+
+        li {
+            width: 100%;
+            word-break: break-all;
+            right: 0;
+        }
     </style>
 </head>
 
@@ -186,6 +195,10 @@
                 <button class="button-blue" onclick="flushCache();">继续</button>
                 <button class="button" onclick="backMain();">取消</button>
             </div>
+            <div id="D_LOADING" class="pane">
+                <h2>正在请求中...</h2>
+                <span>请等待服务器响应。</span>
+            </div>
         </div>
     </div>
 
@@ -207,6 +220,7 @@
         }
         // console.log(namepaths);
         var namepaths_URI = encodeURIComponent(JSON.stringify(namepaths));
+        ShowLoadingUI();
         fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=2", {
             method: 'post',
             body: namepaths_URI,
@@ -220,10 +234,11 @@
                 console.log(e);
                 data = data1
             };
+            HideLoadingUI();
             if (data.msg == undefined) data.msg = "未知错误，请重试。";
             if (data.code != 200) {
-                alert(data.msg);
-                return;
+                // alert(data.msg);
+                // return;
             }
             // pswcache = pswcache1;
             alert(data.msg);
@@ -244,20 +259,27 @@
 
     }
     function showNameUI() {
-        var code = ``;
+        var code = `<h3>已命名</h3>`;
+        let precode = `<h3>待命名</h3>`;
         pathnamess = {};
         for (var i in namepaths) {
             pathnamess[namepaths[i].path] = namepaths[i].name;
         }
         for (var i in paths) {
-            if (pathnamess[paths[i]] == undefined) pathnamess[paths[i]] = "";
-            code += `<li><span class="path-list"><b>${paths[i]}</b><span></span></span><input x-content="${js_H(paths[i])}" class="input name-input" value="${js_H(pathnamess[paths[i]])}" placeholder="请输入名称" /></li>`
+            if (pathnamess[paths[i]] == undefined) {
+                pathnamess[paths[i]] = "";
+                precode += `<li><span class="path-list"><b>${paths[i]}</b><span></span></span><input x-content="${js_H(paths[i])}" class="input name-input" value="${js_H(pathnamess[paths[i]])}" placeholder="请输入名称" /></li>`
+            } else {
+                code += `<li><span class="path-list"><b>${paths[i]}</b><span></span></span><input x-content="${js_H(paths[i])}" class="input name-input" value="${js_H(pathnamess[paths[i]])}" placeholder="请输入名称" /></li>`
+            }
         }
-        nameF.innerHTML = code;
+        nameF.innerHTML = precode + "<hr/>" + code;
     }
     function loadNamePaths() {
+        ShowLoadingUI();
         $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=5", "json").then(data => {
             // console.log(data);
+            HideLoadingUI();
             if (data.msg == undefined) data.msg = "未知错误，请重试。";
             if (data.code != 200) {
                 alert(data.msg);
@@ -266,13 +288,16 @@
             paths = data.data;
             $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=1", "json").then(data => {
                 // console.log(data);
+                HideLoadingUI();
                 if (data.msg == undefined) data.msg = "未知错误，请重试。";
                 if (data.code != 200) {
                     alert(data.msg);
+                    backMain();
                     return;
                 }
                 namepaths = data.data;
                 showNameUI();
+                Ds_NAME.style.display = "inline-block";
                 // D_checkPSW.style.display = "none";
                 // Ds_MAIN.style.display = "inline-block";
             });
@@ -290,6 +315,7 @@
         Ds_MAIN.style.display = "inline-block";
         Ds_NAME.style.display = "none";
         Ds_CACHE.style.display = "none";
+        HideLoadingUI();
     }
     var pswcache = "";
     function changeNPSW() {
@@ -298,7 +324,9 @@
             alert("请输入密码");
             return;
         }
+        D_CHANGEPSW.style.display = "none";
         var pswcache1 = btoa(psw);
+        ShowLoadingUI();
         $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=3&value=" + encodeURIComponent(pswcache1), "json").then(data => {
             // console.log(data);
 
@@ -322,12 +350,18 @@
         loadNamePaths();
     };
     function flushCache() {
+        ShowLoadingUI()
+        Ds_CACHE.style.display = "none";
+
         $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=4", "json").then(data => {
             // console.log(data);
             if (data.msg == undefined) data.msg = "未知错误，请重试。";
+            HideLoadingUI();
+
             if (data.code != 200) {
                 alert(data.msg);
-                return;
+
+                // return;
             }
             backMain();
 
@@ -342,20 +376,32 @@
             alert("请输入密码");
             return;
         }
+        D_checkPSW.style.display = "none";
+        ShowLoadingUI()
         pswcache = btoa(psw);
         $.fetch("../apis/localmanager.php?psw=" + encodeURIComponent(pswcache) + "&action=-1", "json").then(data => {
             // console.log(data);
             if (data.msg == undefined) data.msg = "未知错误，请重试。";
+            HideLoadingUI();
+
             if (data.code != 200) {
                 alert(data.msg);
+                D_checkPSW.style.display = "inline-block";
                 return;
             }
             D_checkPSW.style.display = "none";
             Ds_MAIN.style.display = "inline-block";
         });
     }
-    function changePSW() {
-
+    function ShowLoadingUI() {
+        document.getElementById("D_LOADING").style.display = "inline-block";
+        D_CHANGEPSW.style.display = "none";
+        Ds_MAIN.style.display = "none";
+        Ds_NAME.style.display = "none";
+        Ds_CACHE.style.display = "none";
+    }
+    function HideLoadingUI() {
+        document.getElementById("D_LOADING").style.display = "none";
     }
     /*
     4 刷新缓存

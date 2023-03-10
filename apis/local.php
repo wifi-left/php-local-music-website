@@ -102,7 +102,8 @@ function searchSong($value)
 }
 $seed = 1;
 if (!empty($_GET['seed'])) $seed = $_GET['seed'];
-$seed = strtotime(date('Y-d-m')) . '' . $seed;
+// echo strtotime("2022-17-12");
+$seed = strtotime(date('Y-m-d')) . $seed;
 // echo $offsets;
 switch ($type) {
     case 'random':
@@ -321,6 +322,11 @@ switch ($type) {
             $filepath = dirname($res);
             $musicid = $valued->id;
             $pathid = getId($filepath);
+            $mvres = $filepath . '\\' . $filewithoutext . '.mp4';
+            if (is_file($mvres)) {
+                $line->rid = $musicid;
+                $line->hasmv = 1;
+            }
             $singer = substr($filebasename, 0, strpos($filebasename, " - "));
             if (strpos($filebasename, " - ") != false)
                 $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
@@ -373,12 +379,21 @@ switch ($type) {
         foreach ($files as $valued) {
             // $line->data[] = $value->filename;
             $res = $valued->path;
-            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":"","hasmv":0}');
+
             $filewithoutext = $valued->filename;
+
             $filebasename = basename($filewithoutext);
             $filepath = dirname($res);
+
             $musicid = $valued->id;
+            $mvres = $filepath . '\\' . $filewithoutext . '.mp4';
+            if (is_file($mvres)) {
+                $line->rid = $musicid;
+                $line->hasmv = 1;
+            }
             $pathid = getId($filepath);
+
             $singer = substr($filebasename, 0, strpos($filebasename, " - "));
             if (strpos($filebasename, " - ") != false)
                 $songname = substr($filebasename, strpos($filebasename, " - ") + 3);

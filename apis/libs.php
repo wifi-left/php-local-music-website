@@ -53,8 +53,8 @@ function LRCTOOBJ($lrc)
         $nowline = $arr[$i];
         $timeend = stripos($nowline, "]");
         $textstart = $timeend + 1;
-        $time = timetosecond(substr($nowline, 1, $timeend - 2));
-        if($time <= 0) continue;
+        $time = timetosecond(substr($nowline, 1, $timeend - 1));
+        if($time <= -1) continue;
         $text = (substr($nowline, $textstart));
         $newlrc = new lryicline();
         $newlrc->time = $time;

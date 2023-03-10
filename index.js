@@ -1,8 +1,10 @@
-// const audio = require("fluent-ffmpeg/lib/options/audio");
-// program.getConfig("")
-// const { fstat } = require("fs");
 $("#pre-loading-text").show();
 $("#pre-fail-text").hide();
+var kuro = new Kuroshiro.default();
+kuro.init(new KuromojiAnalyzer({ dictPath: "/kuromoji" }))
+    .then(function () {
+        console.log("Kuromoji Loaded!");
+    });
 var specLrc = 0;
 var debugMode = false;
 debugMode = program.getConfig("debug", false);
@@ -48,6 +50,9 @@ function hideMainLrc(enable) {
     } else {
         document.getElementById("lrycishow").style.display = "inline-block";
     }
+}
+function japan_luoma(enable) {
+    program.setConfig("japan_luoma", enable);
 }
 function LRCSPECAni(enable) {
     program.setConfig("DisabledAnimationLrc", !enable);
@@ -200,14 +205,10 @@ function logdata_error(data) {
 logdata("时间：" + new Date);
 const canvas = document.getElementById("effcan");
 const ctx = canvas.getContext('2d')
-var mplayer = document.getElementById("musicurl");
+// var mplayer = document.getElementById("musicurl");
 var fromUrl = false;
 
-mplayer.onvolumechange = () => {
-    // console.log(mplayer.volume)
-    let volumes = mplayer.volume;
-    localStorage.setItem("volume", volumes);
-}
+
 
 // 有可能会变
 var picSnow = new Image();
@@ -847,8 +848,8 @@ function toLrcTime(second) {
         if (tSec < 10) result = result + "0"; //秒
         result = result + to_string(tSec);
 
-        if (tSec * 100 % 100 == 0) result = result + ".0";
-        if (tSec * 100 % 10 == 0) result = result + "0";
+        if (parseInt(tSec * 100) % 100 == 0) result = result + ".0";
+        if (parseInt(tSec * 100) % 10 == 0) result = result + "0";
     }
     else {
 
@@ -859,8 +860,8 @@ function toLrcTime(second) {
 
         if (tSec < 10) result = result + "0"; //秒
         result = result + to_string(tSec);
-        if (tSec * 100 % 100 == 0) result = result + ".0";
-        if (tSec * 100 % 10 == 0) result = result + "0";
+        if (parseInt(tSec * 100) % 100 == 0) result = result + ".0";
+        if (parseInt(tSec * 100) % 10 == 0) result = result + "0";
     }
     return result;
 }
@@ -905,6 +906,7 @@ function createLrcObj(lrc) {
         lrcs[i] = lrcs[i].replace(/(^\s*)|(\s*$)/g, ""); //去除前后空格
         var t = lrcs[i].substring(lrcs[i].indexOf("[") + 1, lrcs[i].indexOf("]"));//取[]间的内容
         var s = t.split(":");//分离:前后文字
+        // console.log(t);
         if (isNaN(parseInt(s[0]))) { //不是数值
             for (var i in oLRC) {
                 if (i != "ms" && i == s[0].toLowerCase()) {
@@ -957,9 +959,11 @@ function lrcinit() {
         if (line.c == '') {
             line.c = "//";
         }
-        // var code = `<div id='lrc-${i}' class='lrc-line' time='${line.t}'>${HTMLEncode(line.c)}</div>`
+
         var code = `<div id='lrc-${i}' class='lrc-line' time='${line.t}'><span style="transition: 0ms;" class="lrc-content" onclick='playfromtime(${line.t});'>${HTMLEncode(line.c)}</span></div>`
         res += code;
+        // var code = `<div id='lrc-${i}' class='lrc-line' time='${line.t}'>${HTMLEncode(line.c)}</div>`
+
     }
     if (res == "") res = "<div id='lrc-0' class='lrc-line' time='0'>该歌曲暂时无歌词提供</div>";
     document.getElementById("lrycishow").innerHTML = res;
@@ -972,12 +976,87 @@ function lrcinit() {
     if (document.getElementById("lrconly").style.opacity == 1) {
         updateLrcOnly();
     }
+
+    if (program.getConfig("japan_luoma", false)) {
+        var eles = $(".lrc-line .lrc-content");
+        for (var i = 0; i < eles.length; i++) {
+            let ele = eles[i];
+            if (checkLanguage(ele.innerText) == 2) {
+                kuro.convert(ele.innerText,
+                    { to: "romaji", "mode": "spaced", "romajiSystem": "passport" }).then(data => {
+                        ele.innerText = `[${data}] ` + ele.innerText;
+                        // console.log(this.ele.id);
+                    });
+            }
+
+        }
+    }
+}
+
+window.downFile = function (resBlob, fileName, target = '_self') {
+    var blob = new Blob([resBlob], {
+        type: 'text/plain;charset=utf-8'
+    })
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        // 兼容IE/Edge
+        window.navigator.msSaveOrOpenBlob(blob, fileName)
+    } else {
+        var url = window.URL.createObjectURL(blob)
+        var a = document.createElement('a')
+        a.href = url
+        a.target = target
+        a.style.display = 'none'
+        a.setAttribute('download', fileName)
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+    }
+}
+
+function downloadLrcWithRomaji(LRC) {
+    RomajiLrc(LRC, downloadLrcWithRomajiRefunc);
+}
+function downloadLrcWithRomajiRefunc(data) {
+    var blob = new Blob([data], {
+        type: 'text/plain'
+    });
+    window.downFile((blob), mdownloadlrc.getAttribute("download"), "_blank");
+}
+function RomajiLrc(ooLRC, recallFunc) {
+    let oLRC = ooLRC;
+
+    let text = "";
+    for (let i = 0; i < oLRC.ms.length; i++) {
+        text = text + (text == "" ? "" : "\r\n") + oLRC.ms[i].c;
+    }
+    //console.log(text);
+
+    kuro.convert(text,
+        { to: "romaji", "mode": "spaced", "romajiSystem": "passport" }).then(data => {
+            //console.log(data);
+            data = data.replaceAll("\r\n", "\n");
+            data = data.replaceAll("\r", "\n");
+            let res = data.split("\n");
+            let result = "";
+            for (let i = 0; i < res.length; i++) {
+                if (checkLanguage(oLRC.ms[i].c) == 2) {
+                    result += (result == "" ? "" : "\r\n") + "[" + toLrcTime(oLRC.ms[i].t) + "][" + res[i].toString().trim() + "] " + oLRC.ms[i].c.toString().trim();
+                } else {
+                    result += (result == "" ? "" : "\r\n") + "[" + toLrcTime(oLRC.ms[i].t) + "]" + oLRC.ms[i].c.toString().trim();
+                }
+
+            }
+            recallFunc(result);
+            // console.log(this.ele.id);
+        });
 }
 function playfromtime(time) {
     // var time = event.target.getAttribute("time");
     var nowTime = mplayer.currentTime;
     showMsg(`从 ${time} 秒开始播放<br/><a onclick="playfromtime(${nowTime})">返回原位置</a>`, "info", true);
     mplayer.currentTime = time;
+    mplayer.changeTime();
     // mplayer.currentTime = time;
     // showMsg("已撤销操作", "info");
 }
@@ -1588,6 +1667,13 @@ function flushpic(data) {
             lryics = jsont['lrclist'];
         if (lryics == undefined) lryics = [];
         let lrc = JsonToLrc(lryics);
+        // if (program.getConfig("japan_luoma", false)) {
+        //     // kuro.convert(lrc,
+        //     //     { to: "romaji", "mode": "furigana" ,"romajiSystem":"passport"}).then(data => {
+        //     //         createLrcObj(data);
+        //     //     });
+        // } else
+        //console.log(lrc)
         createLrcObj(lrc);
         // logdata_ok("flushpic");
 
@@ -1663,9 +1749,9 @@ function flushpic(data) {
         if (fromUrl == true) {
             showMsg("音乐加载完毕，由于浏览器原因，将尝试在1s后播放。如不行，请请手动播放。", "warn");
             fromUrl = false;
-            setTimeout(() => { mplayer.play(); }, 1000);
+            setTimeout(() => { mplayer.play(0); }, 1000);
         } else {
-            mplayer.play();
+            mplayer.play(0);
         }
     } catch (e) {
         logdata_warn(e);
@@ -1689,8 +1775,14 @@ function flushpic1(data) {
             lryics = jsont['lrclist'];
         if (lryics == undefined) lryics = [];
         let lrc = JsonToLrc(lryics);
+        // createLrcObj(lrc);
+        // if (program.getConfig("japan_luoma", false)) {
+        //     kuro.convert(lrc,
+        //         { to: "romaji", "mode": "furigana" ,"romajiSystem":"passport"}).then(data => {
+        //             createLrcObj(data);
+        //         });
+        // } else
         createLrcObj(lrc);
-
         if ((oLRC.hasTranslate && GOLBAL_mulitirow == 0 || GOLBAL_mulitirow == 1) && !hideMainLrcs) LRCmuliti_Temp(true);
         else ismulitirow = 0;
         // logdata(oLRC)
@@ -1761,9 +1853,9 @@ function flushpic1(data) {
         if (fromUrl == true) {
             showMsg("音乐加载完毕，由于浏览器原因，将尝试在1s后播放。如不行，请请手动播放。", "warn");
             fromUrl = false;
-            setTimeout(() => { mplayer.play(); }, 1000);
+            setTimeout(() => { mplayer.play(0); }, 1000);
         } else {
-            mplayer.play();
+            mplayer.play(0);
         }
     } catch (e) {
         logdata_warn(e);
@@ -1840,7 +1932,7 @@ function listensong1(data, id) {
         showMsg("无法获得此歌曲的播放链接！", "error");
         return;
     }
-    mshowurl.innerHTML = "【点击打开】";
+    mshowurl.innerHTML = "【打开歌曲地址】";
     mshowurl.href = data;
 
     mdownloadmusic.setAttribute("musicurl", data);
@@ -1865,7 +1957,7 @@ function listensong(data, id) {
         showMsg("无法获得此歌曲的播放链接！", "error");
         return;
     }
-    mshowurl.innerHTML = "【点击打开】";
+    mshowurl.innerHTML = "【打开歌曲地址】";
     mshowurl.setAttribute("download", "歌名加载中.mp3");
     // mshowurl.href = data;
     mdownloadmusic.setAttribute("musicurl", data);
@@ -2807,12 +2899,7 @@ window.onresize = function () {
     windowsResize();
 }
 function windowsonload() {
-    let volumes = localStorage.getItem("volume");
-    if (volumes == null) {
-        mplayer.volume = 1;
-    } else {
-        mplayer.volume = volumes;
-    }
+
     windowsResize();
     reloadUserCSS();
 
@@ -3261,7 +3348,10 @@ function nextMusic() {
         document.getElementById("lrycishow").innerHTML = `<div class="lrc-line">正在缓冲下一首歌曲，请稍后...</div>`;
         let musicid = musicPlayingList[musicPlayingIndex]['id'];
         if (musicPlayingIndex == lastMusicIndex) {
-            mplayer.play()
+            mplayer.currentTime = 0;
+
+            mplayer.play(0)
+
             lrcinit();
             return;
         }
@@ -3270,6 +3360,7 @@ function nextMusic() {
     } catch (e) {
         showMsg("切换歌曲时出错：" + e, "error");
     }
+
 
     // lrcinit();
 }

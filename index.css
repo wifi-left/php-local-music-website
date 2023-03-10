@@ -8,6 +8,42 @@
     --selfontsize: 24px;
 }
 
+#barlist .barlist{
+    outline: none;
+    border: none;
+    display: block;
+}
+
+#pre-loadding {
+    z-index: 1145149;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100%);
+    height: calc(100%);
+    text-align: center;
+    background-color: #00ffbf;
+}
+
+#pre-loading-text {
+    display: none;
+}
+
+#pre-loadding * {
+    color: #333;
+}
+
+#music-loading {
+    z-index: 9999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100%);
+    height: calc(100%);
+    text-align: center;
+    /* background-color: #00ffbf; */
+}
+
 #lrconly {
     padding: 16px 16px 16px 16px;
     text-align: center;
@@ -1051,10 +1087,12 @@ h1 {
     list-style-type: none;
     background-color: rgb(99, 99, 99);
 }
-#lrconly-bottom{
+
+#lrconly-bottom {
     display: inline-block;
-    width:100%;
+    width: 100%;
 }
+
 #messagebox {
     height: auto;
     position: fixed;
@@ -1248,16 +1286,19 @@ h1 {
     overflow: none;
     overflow-y: auto;
 }
-#alarmlist_page{
+
+#alarmlist_page {
     position: absolute;
     bottom: 8px;
     line-height: 20px;
     font-size: 16px;
     height: 20px;
 }
-.xfc_content_s{
+
+.xfc_content_s {
     background-color: rgba(24, 24, 24, 1);
 }
+
 .xfc_content {
     padding: 16px 16px 16px 16px;
     /* background-color: rgba(24, 24, 24, 0); */

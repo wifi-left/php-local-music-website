@@ -7,43 +7,18 @@
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
     <title>Bamboo Gamom's Music Manager</title>
     <style>
-        #pre-loadding {
-            z-index: 1145149;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: calc(100%);
-            height: calc(100%);
-            text-align: center;
-            background-color: #00ffbf;
-        }
 
-        #pre-loading-text {
-            display: none;
-        }
-
-        #pre-loadding * {
-            color: #333;
-        }
-
-        #music-loading {
-            z-index: 9999;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: calc(100%);
-            height: calc(100%);
-            text-align: center;
-            /* background-color: #00ffbf; */
-        }
     </style>
     <link href="./index.css" rel="stylesheet">
+    <link href="./lib/mplayer.css" rel="stylesheet">
     <script src="./lib/gquery.js">
     </script>
     <script src="./preload.js">
     </script>
     <script src="./lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="./lib/ace/mode-css.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./lib/kuroshiro/kuroshiro.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./lib/kuroshiro/kuroshiro-analyzer-kuromoji.min.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 
@@ -85,7 +60,13 @@
                 </div>
 
                 <div id="musiccontrol">
-                    <audio controls src="" id="musicurl" tabindex="0"></audio>
+                    <button id="pause-song" class="player-control" onclick="pauseMusic()">播放/暂停</button>
+                    <button id="last-song" class="player-control" onclick="lastMusic()">上一曲</button>
+                    <button id="next-song" class="player-control" onclick="nextMusic()">下一曲</button>
+                    <input type="range" class="player-range" id="play-progress" max="1000" min="0" step="1" value="0" onmousedown="cancelTrack()" onmouseup="startTrack()" />
+                    <button id="mute-volume" class="player-control" onclick="muteVolume()">静音</button>
+                    <input type="range" class="player-range" id="volume-set" step="1" max="100" value="0" min="0" />
+                    <audio style="display:none;" src="" id="musicurl" tabindex="0"></audio>
                 </div>
 
             </div><br />
@@ -105,39 +86,40 @@
 
             </div>
             <div id="barlist">
-                <div onclick="showPage(this);" id="main" class="barlist barlist-hover" tabindex="0">
+                <button onclick="showPage(this);" id="main" class="barlist barlist-hover" tabindex="0">
 
-                </div>
-                <div onclick="showPage(this);" id="search" class="barlist" tabindex="0">
+                </button>
+                <button onclick="showPage(this);" id="search" class="barlist" tabindex="0">
 
-                </div>
-                <div onclick="showPage(this);" id="mylove" class="barlist" tabindex="0">
+                </button>
+                <button onclick="showPage(this);" id="mylove" class="barlist" tabindex="0">
 
-                </div>
-                <div onclick="showPage(this);" id="music" class="barlist" tabindex="0">
+                </button>
+                <button onclick="showPage(this);" id="music" class="barlist" tabindex="0">
 
-                </div>
-                <div onclick="showPage(this);" id="mv" class="barlist" tabindex="0">
+                </button>
+                <button onclick="showPage(this);" id="mv" class="barlist" tabindex="0">
 
-                </div>
+                </button>
                 <!-- <div onclick="showPage(this);" id="download" class="barlist"> -->
                 <!-- </div> -->
 
-                <div onclick="showPage(this);" id="manage" class="barlist" tabindex="0">
+                <button onclick="showPage(this);" id="manage" class="barlist" tabindex="0">
 
-                </div>
-                <div onclick="showPage(this);" id="setting" class="barlist" tabindex="0">
+                </button>
+                <button onclick="showPage(this);" id="setting" class="barlist" tabindex="0">
 
-                </div>
+                </button>
 
                 <div class="hr2" id="barlist-hr"></div>
-                <div onclick="LRCmuliti_Temp(!ismulitirow);" id="mulitirow" class="barlist" title="是否开启双列歌词模式"
+                <button onclick="LRCmuliti_Temp(!ismulitirow);" id="mulitirow" class="barlist" title="是否开启双列歌词模式"
                     tabindex="0">
 
-                </div>
-                <div onclick="insertHead();" id="inserthead" class="barlist" title="是否在歌词最前面插入空歌词（对其歌词）" tabindex="0">
+                </button>
+                <button onclick="insertHead();" id="inserthead" class="barlist" title="是否在歌词最前面插入空歌词（对其歌词）"
+                    tabindex="0">
 
-                </div>
+                </button>
 
             </div>
 
@@ -202,16 +184,15 @@
                             <a href="" id="showOnlyLrc" onclick="showOnlyLrc();">【仅显示歌词】</a>
                         </span><br />
                         <span style="font-size:12px;" id="textmusicurl">
-                            <span class="sinfospan">歌曲地址：</span><a target="_blank" id="mshowurl" href="" tabindex="0">
+                            <span class="sinfospan"></span><a target="_blank" id="mshowurl" href="" tabindex="0">
                                 暂无
-                            </a>&nbsp;
-                            <a tabindex="0"
-                                onclick="downloadsong(this.getAttribute('musicurl'),this.getAttribute('downloadname'))"
-                                target="" id="mdownloadmusic" href="#">
-                                【下载歌曲】
-                            </a>&nbsp;
+                            </a>
                             <a tabindex="0" target="_blank" id="mdownloadlrc" href="data:text/plain;charset=utf-8,">
-                                【下载歌词】
+                                【下载原始歌词】
+                            </a>
+                            <a tabindex="0" onclick="downloadLrcWithRomaji(oLRC)" target="" id="mdownloadmusic"
+                                href="#">
+                                【下载注音歌曲】
                             </a>
                         </span>
 
@@ -418,6 +399,9 @@
                 <button class="button" onclick="program.setConfig('effect',false);efftype = 0;">禁用特效</button>
 
                 <h3>歌词设置</h3>
+                <h4>标注日语罗马音</h4>
+                <button class="button" onclick="japan_luoma(true);">开启</button>
+                <button class="button" onclick="japan_luoma(false);">关闭</button>
                 <h4>正常滚动歌词设置</h4>
                 <span>滚动歌词显示设置</span><br />
                 <button class="button" onclick="hideMainLrc(false);">显示</button>
@@ -535,12 +519,9 @@
     <div id="alertBox">
 
     </div>
-    <!-- <div class="alertBox c-prompt">
-            
-        </div>
-        <div class="alertBox c-alert">
-            
-        </div> -->
+    <script src="./lib/mplayer.js">
+
+    </script>
     <script src="./index.js">
 
     </script>
