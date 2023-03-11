@@ -54,19 +54,26 @@
                     <span id="singername">
 
                     </span>
-                    <div onclick="showMusicList();" id="btn_music" class="smusiclist barlist" title="音乐播放列表"
-                        tabindex="0">
-                    </div>
+
                 </div>
 
                 <div id="musiccontrol">
-                    <button id="pause-song" class="player-control" onclick="pauseMusic()">播放/暂停</button>
                     <button id="last-song" class="player-control" onclick="lastMusic()">上一曲</button>
+                    <button id="pause-song" class="player-control" onclick="pauseMusic()">播放/暂停</button>
                     <button id="next-song" class="player-control" onclick="nextMusic()">下一曲</button>
-                    <input type="range" class="player-range" id="play-progress" max="1000" min="0" step="1" value="0" onmousedown="cancelTrack()" onmouseup="startTrack()" ontouchstart="cancelTrack()" ontouchend="startTrack()" />
+                    <input type="range" class="player-range" id="play-progress" max="1000" min="0" step="1" value="0"
+                        onmousedown="cancelTrack()" onmouseup="startTrack()" ontouchstart="cancelTrack()"
+                        ontouchend="startTrack()" />
+                    <span id="player-time-current">00:00</span>
+                    <span id="player-time-xie">/</span>
+                    <span id="player-time-total">00:00</span>
                     <button id="mute-volume" class="player-control" onclick="muteVolume()">静音</button>
                     <input type="range" class="player-range" id="volume-set" step="1" max="100" value="0" min="0" />
+                    <button onclick="showMusicList();" id="btn_music" class="smusiclist player-control" title="音乐播放列表"
+                        tabindex="0">音乐播放列表
+                    </button>
                     <audio style="display:none;" src="" id="musicurl" tabindex="0"></audio>
+
                 </div>
 
             </div><br />
@@ -220,7 +227,7 @@
                     <div class="hr"></div>
                 </h1>
                 <div id="mlistbar" onblur="$('#autoinfo').hide();" onclick="$('#autoinfo').hide();">
-                    
+
                 </div>
             </div>
             <div id="psearch" class="page">

@@ -13,9 +13,14 @@ input[type=range] {
     height: 4px;
     border-radius: 8px;
 }
-.player-range{
+
+.player-range {
     display: inline-block;
+    position: relative;
+    top: -4px;
+    vertical-align: middle;
 }
+
 /*拖动块的样式*/
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -31,59 +36,160 @@ input[type=range]::-webkit-slider-thumb {
     border: solid 1px #ccc;
     /*设置边框*/
 }
+
 input[type=range]::-webkit-slider-thumb:hover {
     background: #cfcfcf;
     border: solid 1px #b4b4b4;
     /*设置边框*/
 }
+
 input[type=range]::-webkit-slider-thumb:active {
     background: #a3a3a3;
     border: solid 1px #aaaaaa;
     /*设置边框*/
 }
-.player-control{
-    text-indent:-9999px;
-    overflow:hidden;
-    width:24px;
-    height:24px;
+
+#musiccontrol {
+    font-size: 0;
+    padding-top: 0;
+    padding-left: 12px;
+}
+
+.player-control {
+    vertical-align: middle;
+    text-indent: -9999px;
+    overflow: hidden;
+    width: 24px;
+    height: 24px;
     display: inline-block;
     background-repeat: no-repeat;
     background-size: 80%;
     background-position: 50% 50%;
-    background-color: rgba(0,0,0,0);
-    border: 2px solid #333;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    /* margin-left:2px; */
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
     transition: 100ms;
+    /* margin: 0 0 0 0; */
     /* border-radius: 8px; */
     /* padding: 2px 2px 2px 2px; */
 }
-.player-control:hover{
+
+.player-control:hover {
     background-color: rgba(131, 131, 131, 0.397);
 }
-.player-control:active{
+
+.player-control:active {
     background-color: rgba(99, 99, 99, 0.555);
 }
-#pause-song{
+
+#pause-song {
     background-image: url("../img/player/play.svg");
 }
-.player-paused{
+
+.player-paused {
     background-image: url("../img/player/pause.svg") !important;
 }
-#next-song{
+
+#next-song {
     background-image: url("../img/player/skip-forward.svg");
 }
-#last-song{
+
+#last-song {
     background-image: url("../img/player/skip-back.svg");
 }
-#mute-volume{
+
+#mute-volume {
     background-image: url("../img/player/volume-1.svg");
 }
-.volume-muted{
+
+.volume-muted {
     background-image: url("../img/player/volume-x.svg") !important;
 
 }
-#volume-set{
+
+#btn_music {
+    overflow: hidden;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: 80%;
+    background-position: 50% 50%;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-radius: 0;
+    bottom: 2px;
+    top: unset;
+    right: 8px;
+}
+
+#btn_music:hover {
+    background-color: rgba(131, 131, 131, 0.397);
+}
+
+#btn_music:active {
+    background-color: rgba(99, 99, 99, 0.555);
+}
+
+#volume-set {
     width: calc(80px);
 }
-#play-progress{
-    width:calc(100% - 220px);
+
+#play-progress {
+    width: calc(100% - 308px);
+}
+
+@media screen and (max-width: 499px) {
+    #volume-set {
+        /* width: 20px; */
+        display: none;
+    }
+
+    #play-progress {
+        width: calc(100% - 210px);
+
+    }
+}
+
+#player-time-xie {
+    vertical-align: middle;
+
+    font-size: 12px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #333;
+    margin-left: 2px;
+    margin-right: 2px;
+    width: 8px;
+    overflow: hidden;
+    text-align: center;
+    display: inline-block;
+}
+
+#player-time-current {
+    vertical-align: middle;
+    color: #333;
+    font-size: 12px;
+    margin-left: 2px;
+    margin-right: 2px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    width: 30px;
+    display: inline-block;
+    overflow: hidden;
+    text-align: right;
+}
+
+#player-time-total {
+    width: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    color: #333;
+    text-align: left;
+    margin-left: 2px;
+    margin-right: 2px;
+    overflow: hidden;
+    font-size: 12px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
