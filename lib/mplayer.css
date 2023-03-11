@@ -154,6 +154,14 @@ input[type=range]::-webkit-slider-thumb:active {
     }
 }
 
+#messagebox {
+    pointer-events: none;
+}
+
+#messagebox a {
+    pointer-events: auto;
+}
+
 #player-time-xie {
     vertical-align: middle;
 

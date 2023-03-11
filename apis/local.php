@@ -57,7 +57,7 @@ function searchSong($value)
     foreach ($GLOBALS['files'] as $valued) {
         // $line->data[] = $value->filename;
         $res = $valued->path;
-        $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+        $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":"","pic":null,"web_albumpic_short":null}');
         $filewithoutext = substr($res, 0, strrpos($res, "."));
         $mvres = $filewithoutext . '.mp4';
         if (is_file($mvres)) {
@@ -67,12 +67,17 @@ function searchSong($value)
         $filebasename = basename($filewithoutext);
         $filepath = dirname($res);
         $musicid = $valued->id;
+        $cover = $valued->cover;
         $pathid = getId($filepath);
         $singer = substr($filebasename, 0, strpos($filebasename, " - "));
         if (strpos($filebasename, " - ") != false)
             $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
         else $songname = $filebasename;
         // echo strpos($res, " - ");
+        if($cover!=-1){
+            $line->pic = "./apis/cover.php?id=" . $cover;
+            $line->web_albumpic_short = "./apis/cover.php?id=" . $cover;
+        }
         if (!empty($songname)) {
             $line->name = $songname;
             $line->songName = $songname;
@@ -107,8 +112,6 @@ $seed = strtotime(date('Y-m-d')) . $seed;
 // echo $offsets;
 switch ($type) {
     case 'random':
-
-
         // echo $seed;
         // return;
 
@@ -221,7 +224,7 @@ switch ($type) {
         $lrc = LRCTOOBJ($lrcstr);
 
 
-        $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+        $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":"","pic":null}');
         if (is_file($mvres)) {
             $line->hasmv = 1;
             $line->hasMv = 1;
@@ -236,6 +239,15 @@ switch ($type) {
             $songname = substr($filebasename, strpos($filebasename, " - ") + 3);
         else $songname = $filebasename;
         // echo strpos($res, " - ");
+        $cover = -1;
+        if(file_exists($filepath . "\\" . "cover.png")){
+            $cover = getId($filepath . "\\" . "cover.png");
+        } else if(file_exists($filepath . "\\" . "cover.jpg")){
+            $cover = getId($filepath . "\\" . "cover.jpg");
+        } 
+        if($cover!=-1){
+            $line->pic = "./apis/cover.php?id=" . $cover;
+        }
         if (!empty($songname)) {
             $line->name = $songname;
             $line->songName = $songname;
@@ -316,16 +328,22 @@ switch ($type) {
         foreach ($files as $valued) {
             // $line->data[] = $value->filename;
             $res = $valued->path;
-            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":""}');
+            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":"","pic":null,"web_albumpic_short":null}');
             $filewithoutext = $valued->filename;
             $filebasename = basename($filewithoutext);
             $filepath = dirname($res);
             $musicid = $valued->id;
             $pathid = getId($filepath);
+            $cover = -1;
             $mvres = $filepath . '\\' . $filewithoutext . '.mp4';
             if (is_file($mvres)) {
                 $line->rid = $musicid;
                 $line->hasmv = 1;
+            }
+            $cover = $valued->cover;
+            if($cover!=-1){
+                $line->pic = "./apis/cover.php?id=" . $cover;
+                $line->web_albumpic_short = "./apis/cover.php?id=" . $cover;
             }
             $singer = substr($filebasename, 0, strpos($filebasename, " - "));
             if (strpos($filebasename, " - ") != false)
@@ -379,13 +397,16 @@ switch ($type) {
         foreach ($files as $valued) {
             // $line->data[] = $value->filename;
             $res = $valued->path;
-            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":"","hasmv":0}');
+            $line = json_decode('{"id":0,"rid":"0","musicrid":"0","payInfo":{"feeType":{"vip":0}},"artist":"","name":"","album":"","albumid":"","albumId":"","albumpic":"","artistid":"","releaseDate":null,"songName":"","hasmv":0,"pic":null}');
 
             $filewithoutext = $valued->filename;
 
             $filebasename = basename($filewithoutext);
             $filepath = dirname($res);
-
+            $cover = $valued->cover;
+            if($cover!=-1){
+                $line->pic = "./apis/cover.php?id=" . $cover;
+            }
             $musicid = $valued->id;
             $mvres = $filepath . '\\' . $filewithoutext . '.mp4';
             if (is_file($mvres)) {

@@ -4,16 +4,19 @@ class fileinfo
     public $filename = "";
     public $path = "";
     public $id = 0;
+    public $cover = -1;
 }
 class localfileinfo
 {
     public $path = "";
     public $type = 0; //0 is file; 1 is folder
+    public $cover = -1; // For dir
 }
 $files = array();
 $limit = 30;
 $page = 0;
 $count = 0;
+
 function send_error($error)
 {
     echo '{"code":500,"msg":"500 - ' . $error . '"}';
@@ -204,6 +207,12 @@ function scanAllFile_cache($path)
     }
     $result = array();
     $arr = scandir($path);
+    $cover = -1;
+    if (file_exists($path . '\\cover.jpg')) {
+        $cover = getId($path . '\\cover.jpg', 1);
+    } else if (file_exists($path . '\\cover.png')) {
+        $cover = getId($path . '\\cover.png', 1);
+    }
     foreach ($arr as $value) {
         //过滤掉当前目录和上级目录
         if ($value !== "." && $value !== "..") {
@@ -227,6 +236,7 @@ function scanAllFile_cache($path)
                 $file = new localfileinfo();
                 $file->path = $value;
                 $file->type = 0;
+                $file->cover = $cover;
                 $result[] = $file;
             }
         }
@@ -281,6 +291,7 @@ function scanAllFile($spath, $filter = "*.*", $needtotal = true, $suggestMode = 
         //过滤掉当前目录和上级目录
         $nowp = $arr[$sidx];
         $type = $nowp->type;
+        $cover = $nowp->cover;
         $path = $spath;
         $value = $nowp->path;
         if ($value !== "." && $value !== "..") {
@@ -296,15 +307,15 @@ function scanAllFile($spath, $filter = "*.*", $needtotal = true, $suggestMode = 
                 if (fnmatch("*.mp3", $value)) $flag = true;
                 if ($flag) {
                     if (stristr($value, $filter) != false) {
-                        if (searchSuba($path, $value)) {
+                        if (searchSuba($path, $value, $cover)) {
                             return;
                         };
                     } else if (stristr(basename($path), $filter) != false) {
-                        if (searchSuba($path, $value)) {
+                        if (searchSuba($path, $value, $cover)) {
                             return;
                         };
                     } else if (stristr(getDirAlName(dirname($path . '\\' . $value)), $filter) != false) {
-                        if (searchSuba($path, $value)) {
+                        if (searchSuba($path, $value, $cover)) {
                             return;
                         };
                     }
@@ -313,7 +324,7 @@ function scanAllFile($spath, $filter = "*.*", $needtotal = true, $suggestMode = 
         }
     }
 }
-function searchSuba($path, $value)
+function searchSuba($path, $value, $cover = -1)
 {
     if (is_file($path . '\\' . $value)) {
         $GLOBALS['total'] += 1;
@@ -330,7 +341,7 @@ function searchSuba($path, $value)
         $filename = str_replace(strrchr($value, "."), "", $value);
         $file->filename = $filename;
         $file->path = $path . '\\' . $value;
-
+        $file->cover = $cover;
         $file->id = getId($path . '\\' . $value, 2);
         $GLOBALS['files'][] = $file;
         // $GLOBALS['count'] = $GLOBALS['count'] + 1;
