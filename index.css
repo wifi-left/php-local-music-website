@@ -8,7 +8,7 @@
     --selfontsize: 24px;
 }
 
-#barlist .barlist{
+#barlist .barlist {
     outline: none;
     border: none;
     display: block;
@@ -1102,7 +1102,9 @@ h1 {
     overflow: auto;
     /* max-height: calc(100% - 32px); */
     width: 34%;
-    top: 0px;
+    /* top: 0px;
+     */
+    bottom: 80px;
     right: 0;
     padding: 16px 16px 16px 16px;
     /* background-color: #333; */
