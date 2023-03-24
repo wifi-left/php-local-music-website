@@ -45,7 +45,9 @@
     #musiclrcshow {
         width: calc(70% - 8px);
     }
-
+    #ssongname{
+        font-size:20px !important;
+    }
     #sinfo {
         width: calc(30% - 8px);
     }
@@ -55,7 +57,9 @@
     #musiclrcshow {
         width: calc(60% - 8px);
     }
-
+    #ssongname{
+        font-size:16px !important;
+    }
     #sinfo {
         width: calc(40% - 8px);
     }
@@ -64,6 +68,9 @@
 @media screen and (min-width: 1600px) {
     #musiclrcshow {
         width: calc(100% - 512px);
+    }
+    #ssongname{
+        font-size:22px;
     }
 
     #sinfo {

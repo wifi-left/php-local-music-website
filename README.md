@@ -39,3 +39,5 @@ GUI 界面在 `/manager/index.html`。
 **gQuery** by Ganxiaozhe
 
 **ace.js** by ajaxorg (代码编辑器)
+
+**Kuromoji** 获取罗马音
