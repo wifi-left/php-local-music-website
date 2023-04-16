@@ -199,7 +199,7 @@ summary {
     color: rgb(230, 230, 230);
     background-color: rgb(54, 54, 54);
     margin: 4px 4px 4px 4px;
-
+    cursor: pointer;
 }
 
 #editor,

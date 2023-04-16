@@ -10,23 +10,23 @@ const languageNameList = [
     "韩文",
     "俄语"
 ]
-
+let pathname = location.href.substring(0,location.href.lastIndexOf("/"));
 const localApis = {
     root: location,
-    search: location.origin + location.pathname + "/apis/local.php?type=search&value=${key}&offset=${pg}&limit=${pgsize}",
-    songurl: location.origin + location.pathname + "/apis/local.php?type=url&value=${id}",
-    songinfo: location.origin + location.pathname + "/apis/local.php?type=info&value=${id}",
+    search: pathname + "/apis/local.php?type=search&value=${key}&offset=${pg}&limit=${pgsize}",
+    songurl: pathname + "/apis/local.php?type=url&value=${id}",
+    songinfo: pathname + "/apis/local.php?type=info&value=${id}",
     kwpicPrefix: "",
-    mvplayUrl: location.origin + location.pathname + "/apis/void.json",
-    kwplaylist: location.origin + location.pathname + "/apis/local.php?type=folder",
-    hottopsong: location.origin + location.pathname + "/apis/local.php?type=random",
-    searchHelpKey: location.origin + location.pathname + "/apis/local.php?type=suggestKey&value=${value}",
-    singersongs: location.origin + location.pathname + "/apis/local.php?type=singer&value=${id}&offset=${pn}&limit=${norpgsize}",
-    alarmsongs: location.origin + location.pathname + "/apis/local.php?type=alarm&value=${id}&offset=${pn}&limit=${norpgsize}",
-    topsong: location.origin + location.pathname + "/apis/local.php?type=random&value=${norpgsize}&seed=${pn}",
-    mv: location.origin + location.pathname + "/apis/local.php?type=mv&value=${id}",
-    playlist: location.origin + location.pathname + "/apis/local.php?type=playlist&value=${id}&offset=${pn}&limit=${norpgsize}",
-    randomSong: location.origin + location.pathname + "/apis/local.php?type=random"
+    mvplayUrl: pathname + "/apis/void.json",
+    kwplaylist: pathname + "/apis/local.php?type=folder",
+    hottopsong: pathname + "/apis/local.php?type=random",
+    searchHelpKey: pathname + "/apis/local.php?type=suggestKey&value=${value}",
+    singersongs: pathname + "/apis/local.php?type=singer&value=${id}&offset=${pn}&limit=${norpgsize}",
+    alarmsongs: pathname + "/apis/local.php?type=alarm&value=${id}&offset=${pn}&limit=${norpgsize}",
+    topsong: pathname + "/apis/local.php?type=random&value=${norpgsize}&seed=${pn}",
+    mv: pathname + "/apis/local.php?type=mv&value=${id}",
+    playlist: pathname + "/apis/local.php?type=playlist&value=${id}&offset=${pn}&limit=${norpgsize}",
+    randomSong: pathname + "/apis/local.php?type=random"
 }
 var MusicApis = localApis;
 

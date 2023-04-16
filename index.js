@@ -514,13 +514,13 @@ function c_prompt(title, content, coded, valueDef, OKTitle, CANCELTitle, JundgeF
 flushLrcSetting();
 function flushLrcSetting() {
 
-    var result = `<div class="configLine"><button onclick="changeCfg(null)" class="button cbutton">></button>默认配置 (深色) [默认]</div>`;
+    var result = `<div class="configLine"><button onclick="changeCfg(null)" class="cbutton button ">></button>默认配置 (深色) [默认]</div>`;
     var data = program.listExampleConfig(true);
     for (var i in data) {
         let idx = data[i].index;
         let name = data[i].name;
         // logdata(name);
-        var code = `<div class="configLine"><button onclick="changeCfg(${idx},'${name.replaceAll('\\', "\\\\").replaceAll("'", "\'")}')" class="button cbutton">></button>${HTMLEncode(name)}</div>`;
+        var code = `<div class="configLine"><button onclick="changeCfg(${idx},'${name.replaceAll('\\', "\\\\").replaceAll("'", "\'")}')" class="cbutton button ">></button>${HTMLEncode(name)}</div>`;
         result += code;
     }
     // re();
