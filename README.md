@@ -1,3 +1,6 @@
+# 更新项目
+请转到：https://github.com/wifi-left/bamboo-music-web
+
 # 介绍
 
 PHP + HTML 做的在线音乐存储库。
